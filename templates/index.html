@@ -1,0 +1,353 @@
+{% extends "layout.html" %}
+
+{% block title %}Keşfet | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- GENEL AYARLAR --- */
+    :root {
+        --accent-rich: #00C851; /* Ana Renk */
+        --card-bg: #1f1f1f;
+        --bg-dark: #141414;
+    }
+
+    /* HERO BANNER */
+    .hero-banner {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1c1c1c 100%);
+        border-radius: 24px;
+        padding: 40px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+        color: white;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+    .hero-banner::after {
+        content: ''; position: absolute; top: -50%; right: -5%;
+        width: 400px; height: 400px;
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 60%);
+        border-radius: 50%; pointer-events: none; filter: blur(40px);
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 700px; }
+
+    .hero-title {
+        font-weight: 800; font-size: 2.5rem; letter-spacing: -1px;
+        margin-bottom: 15px; line-height: 1.1; color: #fff !important;
+    }
+    .hero-desc {
+        color: rgba(255,255,255,0.7); font-size: 1.1rem;
+        margin-bottom: 25px; font-weight: 400; line-height: 1.6;
+    }
+
+    /* ARAMA ÇUBUĞU */
+    .search-container { position: relative; max-width: 100%; }
+    .search-input {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 50px;
+        padding: 14px 20px 14px 50px;
+        color: white !important; width: 100%;
+        backdrop-filter: blur(15px);
+        transition: all 0.3s ease; font-size: 1rem;
+    }
+    .search-input:focus {
+        background: rgba(255,255,255,0.15);
+        outline: none; border-color: var(--accent-rich);
+        box-shadow: 0 0 20px rgba(0, 200, 81, 0.2);
+    }
+    .search-icon-btn {
+        position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+        background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.1rem;
+    }
+
+    /* --- PREMIUM KATEGORİ BUTONLARI --- */
+    .category-scroll {
+        display: flex; gap: 12px; overflow-x: auto;
+        padding: 10px 5px 20px 5px;
+        margin-bottom: 10px;
+        scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .category-scroll::-webkit-scrollbar { display: none; }
+
+    .cat-chip {
+        /* NORMAL DURUM */
+        background: rgba(255,255,255,0.05); 
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        
+        /* BURASI ÖNEMLİ: !important ile turuncuyu eziyoruz */
+        color: #ffffff !important; 
+        
+        padding: 12px 28px;
+        border-radius: 50px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+    }
+
+    /* HOVER (ÜZERİNE GELİNCE) */
+    .cat-chip:hover, .cat-chip.active {
+        background: #ffffff; /* Zemin Beyaz */
+        border-color: #ffffff;
+        
+        /* BURASI ÖNEMLİ: Hover olunca yazı Siyah olsun */
+        color: #000000 !important; 
+        
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+    }
+
+    /* --- SLIDER YAPISI --- */
+    .category-section { margin-bottom: 50px; position: relative; }
+
+    .section-title {
+        font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 20px;
+        padding-left: 15px; border-left: 4px solid var(--accent-rich);
+        display: flex; align-items: center;
+    }
+
+    .slider-wrapper { position: relative; display: flex; align-items: center; }
+
+    .slider-container {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        gap: 20px;
+        padding: 10px 5px;
+        width: 100%;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .slider-container::-webkit-scrollbar { display: none; }
+
+    /* --- PREMIUM HAYALET BUTONLAR --- */
+    .swipe-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 45px; height: 45px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: white;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        z-index: 20;
+        transition: all 0.3s ease;
+        outline: none !important;
+    }
+
+    .swipe-btn:hover {
+        background: var(--accent-rich);
+        color: #000;
+        border-color: var(--accent-rich);
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 0 15px rgba(0, 200, 81, 0.5);
+    }
+
+    .btn-prev { left: 0px; }
+    .btn-next { right: 0px; }
+
+    @media (min-width: 992px) {
+        .swipe-btn {
+            width: 50px; height: 50px;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        .btn-prev { left: -25px; }
+        .btn-next { right: -25px; }
+    }
+
+    /* KART TASARIMI */
+    .quiz-slide-card {
+        flex: 0 0 auto;
+        width: 260px;
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px; overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative; display: flex; flex-direction: column;
+    }
+    .quiz-slide-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        border-color: var(--accent-rich);
+        z-index: 10;
+    }
+
+    .showcase-img-wrapper {
+        position: relative; width: 100%;
+        aspect-ratio: 223 / 256;
+        overflow: hidden; background-color: #000;
+    }
+    .showcase-img {
+        width: 100%; height: 100%; object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+    .quiz-slide-card:hover .showcase-img { transform: scale(1.1); }
+
+    .showcase-badge {
+        position: absolute; top: 12px; left: 12px; z-index: 2;
+        background: rgba(0,0,0,0.85); color: white; padding: 5px 12px;
+        border-radius: 50px; font-size: 0.75rem; font-weight: 700;
+        backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .showcase-body { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+
+    .showcase-title {
+        color: #ffffff !important; font-weight: 700; font-size: 1.1rem;
+        margin-bottom: 8px; line-height: 1.4; text-decoration: none;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .showcase-title:hover { color: var(--accent-rich) !important; }
+
+    .author-info { color: #888; font-size: 0.85rem; margin-bottom: 12px; display: flex; align-items: center; }
+
+    .showcase-meta {
+        margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08);
+        display: flex; justify-content: space-between; align-items: center;
+        color: #bbb; font-size: 0.85rem; font-weight: 600;
+    }
+
+    /* MOBİL AYARLARI */
+    @media (max-width: 768px) {
+        .container-fluid { padding-left: 15px !important; padding-right: 15px !important; }
+        .hero-banner { padding: 25px 20px; border-radius: 16px; margin-bottom: 20px; }
+        .hero-title { font-size: 1.8rem; }
+        .hero-desc { font-size: 0.9rem; -webkit-line-clamp: 2; }
+
+        .slider-wrapper { margin-left: 0; margin-right: 0; }
+        .slider-container {
+            padding-left: 10px; padding-right: 10px;
+            gap: 15px;
+            scroll-snap-type: x mandatory;
+        }
+
+        .quiz-slide-card {
+            width: 85vw !important;
+            scroll-snap-align: center;
+        }
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid mt-4 mb-5" style="padding-left: 30px; padding-right: 30px;">
+
+    <div class="hero-banner">
+        <div class="hero-content">
+            <h1 class="hero-title">Bilgini <span style="color: var(--accent-rich) !important;">Yarıştır.</span></h1>
+            <p class="hero-desc">Topluluğun oluşturduğu binlerce testi çöz, turnuvalara katıl ve liderlik tablosunda yüksel.</p>
+
+            <form action="/" method="GET" class="search-container">
+                <button type="submit" class="search-icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <input type="text" name="keyword" class="search-input" placeholder="Quiz, kategori veya içerik ara...">
+            </form>
+
+            {% if not session.logged_in %}
+                <div class="mt-4">
+                    <a href="/register" class="btn font-weight-bold shadow-sm" style="border-radius: 50px; padding: 12px 30px; background: white; color: #141414 !important; font-size: 0.95rem;">
+                        <i class="fa-solid fa-rocket mr-2" style="color: var(--accent-rich);"></i> Hemen Başla
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="category-scroll">
+        <a href="/" class="cat-chip">Trend</a>
+        <a href="/?keyword=Genel" class="cat-chip">Genel</a>
+        <a href="/?keyword=Oyun" class="cat-chip">Oyun</a>
+        <a href="/?keyword=Film" class="cat-chip">Film & Dizi</a>
+        <a href="/?keyword=Spor" class="cat-chip">Spor</a>
+        <a href="/?keyword=Müzik" class="cat-chip">Müzik</a>
+        <a href="/?keyword=Teknoloji" class="cat-chip">Teknoloji</a>
+    </div>
+
+    {% if grouped_quizzes %}
+
+        {% for category_name, quizzes in grouped_quizzes.items() %}
+        <div class="category-section">
+
+            <h3 class="section-title">{{ category_name }}</h3>
+
+            <div class="slider-wrapper">
+                <button class="swipe-btn btn-prev" onclick="slideScroll(this, 'left')">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <div class="slider-container">
+                    {% for quiz in quizzes %}
+                    <div class="quiz-slide-card">
+
+                        <div class="showcase-img-wrapper">
+                            <span class="showcase-badge">{{ quiz.category }}</span>
+                            <a href="{{ url_for('quiz_detail', quiz_id=quiz.quiz_id) }}">
+                                <img src="{{ url_for('static', filename='uploads/quiz_covers/' + quiz.cover_image_url) }}" class="showcase-img" loading="lazy">
+                            </a>
+                        </div>
+
+                        <div class="showcase-body">
+                            <a href="{{ url_for('quiz_detail', quiz_id=quiz.quiz_id) }}" class="showcase-title" title="{{ quiz.title }}">
+                                {{ quiz.title }}
+                            </a>
+                            <div class="author-info">
+                                <i class="fa-solid fa-user-circle mr-1"></i> {{ quiz.author_name }}
+                            </div>
+                            <div class="showcase-meta">
+                                <div title="Görüntülenme"><i class="fa-solid fa-eye"></i> {{ quiz.views }}</div>
+                                <div title="Beğeni"><i class="fa-solid fa-heart" style="color: var(--accent-rich);"></i> {{ quiz.likes }}</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button class="swipe-btn btn-next" onclick="slideScroll(this, 'right')">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fa-solid fa-box-open fa-4x text-muted mb-3" style="opacity: 0.5;"></i>
+            <h3 class="text-white">Henüz içerik bulunamadı.</h3>
+            <p class="text-muted">Arama kriterlerini değiştir veya yeni bir quiz oluştur.</p>
+            <a href="/" class="btn btn-outline-success mt-3" style="border-radius: 50px;">Ana Sayfaya Dön</a>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function slideScroll(element, direction) {
+        const wrapper = element.closest('.slider-wrapper');
+        const container = wrapper.querySelector('.slider-container');
+
+        const isMobile = window.innerWidth < 768;
+        const scrollAmount = isMobile ? (window.innerWidth * 0.85) : 400;
+
+        if (direction === 'left') {
+            container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        } else {
+            container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+    }
+</script>
+{% endblock %}

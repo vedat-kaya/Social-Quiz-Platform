@@ -1,0 +1,165 @@
+{% extends "layout.html" %}
+
+{% block title %}Hakkımızda | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- ABOUT ORIGINAL STİLİ --- */
+    
+    .about-header {
+        text-align: center;
+        padding: 40px 20px;
+        margin-bottom: 30px;
+    }
+    
+    .brand-title {
+        font-size: 4rem; /* Masaüstünde büyük */
+        font-weight: 900;
+        letter-spacing: -2px;
+        background: linear-gradient(135deg, var(--text-color) 0%, var(--primary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 10px;
+        line-height: 1.2; /* Satır aralığını düzelttim */
+    }
+
+    .about-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 30px;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .about-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        border-color: var(--primary-color);
+    }
+
+    .icon-wrapper {
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        background-color: var(--bg-color);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 20px auto;
+        font-size: 2rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .contact-box {
+        background-color: var(--bg-color);
+        border: 1px dashed var(--border-color);
+        border-radius: 15px;
+        padding: 20px;
+        display: inline-block;
+        color: var(--text-muted);
+        width: 100%; /* Mobilde kutu genişlesin */
+        max-width: 600px; /* Masaüstünde çok yayılmasın */
+    }
+    .contact-box strong { color: var(--primary-color); }
+
+    /* --- MOBİL UYUMLULUK AYARLARI (SADECE BURASI EKLENDİ) --- */
+    @media (max-width: 768px) {
+        /* Başlığı küçült, ekrana sığsın */
+        .brand-title {
+            font-size: 2.5rem !important; 
+            letter-spacing: -1px;
+        }
+
+        /* Üst boşluğu azalt */
+        .about-header {
+            padding: 20px 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Kartların iç boşluğunu azalt ki yazılar kenarlara yapışmasın */
+        .about-card {
+            padding: 20px 15px;
+            margin-bottom: 15px; /* Kartlar arası boşluk */
+        }
+        
+        /* Yazı boyutlarını mobile göre ayarla */
+        .lead {
+            font-size: 1rem !important;
+        }
+        
+        /* İkonları bir tık küçült */
+        .icon-wrapper {
+            width: 70px;
+            height: 70px;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4 mb-5">
+    
+    <div class="about-header">
+        <h1 class="brand-title aralikli-baslik">SORSANA</h1>
+        <p class="lead" style="color: var(--text-muted); font-size: 1.2rem;">
+            "Bilgi paylaştıkça, eğlence yarıştıkça çoğalır."
+        </p>
+        <div style="width: 60px; height: 4px; background-color: var(--primary-color); margin: 20px auto; border-radius: 2px;"></div>
+    </div>
+
+    <div class="row">
+        
+        <div class="col-md-4 mb-4">
+            <div class="about-card">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-wand-magic-sparkles text-warning"></i>
+                </div>
+                <h4 style="color: var(--text-color); font-weight: 700;">Kendin Yarat</h4>
+                <p style="color: var(--text-muted);">
+                    İster klasik testler, ister fotoğraflı turnuvalar... Hayal gücünü kullanarak kendi içeriklerini oluştur ve dünyayla paylaş.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="about-card">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-users-line text-info"></i>
+                </div>
+                <h4 style="color: var(--text-color); font-weight: 700;">Topluluğa Katıl</h4>
+                <p style="color: var(--text-muted);">
+                    Binlerce kullanıcıyla etkileşime geç. Beğendiğin quizleri kaydet, yorum yap ve liderlik tablosunda yerini al.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="about-card">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-mobile-screen-button text-success"></i>
+                </div>
+                <h4 style="color: var(--text-color); font-weight: 700;">Her An Yanında</h4>
+                <p style="color: var(--text-muted);">
+                    Otobüste, evde veya okulda... SorSana tüm cihazlarla uyumludur. Canın sıkıldığında eğlence bir tık uzağında.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8 text-center">
+            <div class="contact-box">
+                <i class="fa-solid fa-envelope fa-2x mb-2" style="color: var(--text-color);"></i>
+                <h5 style="color: var(--text-color); font-weight: 700;">Bize Ulaşın</h5>
+                <p class="mb-0">Görüş ve önerilerin için: <br class="d-block d-sm-none"> <strong>sorsana.iletisim@gmail.com</strong></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

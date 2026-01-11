@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+
+{% block title %}Sistem Hatası (500) | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- 500 ERROR PREMIUM STİLİ --- */
+    
+    .error-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .error-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 30px;
+        padding: 50px 30px;
+        max-width: 600px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Arka plandaki hafif kırmızı parlama */
+    .error-glow {
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(220, 53, 69, 0.05) 0%, transparent 60%);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .error-content { position: relative; z-index: 1; }
+
+    /* Büyük 500 Yazısı */
+    .error-code {
+        font-size: 8rem;
+        font-weight: 900;
+        line-height: 1;
+        margin-bottom: 10px;
+        /* Ateşli Gradient */
+        background: -webkit-linear-gradient(45deg, #dc3545, #fd7e14);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -5px;
+        animation: pulse 3s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.02); opacity: 0.9; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .error-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-color);
+        margin-bottom: 15px;
+    }
+
+    .error-desc {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    /* Sahte Hata Kodu Kutusu (Dekoratif) */
+    .tech-box {
+        background: rgba(0,0,0,0.3);
+        border: 1px dashed var(--border-color);
+        padding: 10px;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        color: #dc3545;
+        margin-bottom: 30px;
+        display: inline-block;
+    }
+
+    /* Butonlar */
+    .btn-home {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 50px;
+        padding: 12px 30px;
+        font-weight: 700;
+        border: none;
+        transition: transform 0.2s;
+        box-shadow: 0 5px 15px rgba(253, 126, 20, 0.3);
+    }
+    .btn-home:hover { transform: translateY(-3px); color: white; }
+
+    .btn-retry {
+        background-color: transparent;
+        border: 2px solid var(--border-color);
+        color: var(--text-color);
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 600;
+        margin-left: 10px;
+        transition: all 0.2s;
+    }
+    .btn-retry:hover { background-color: var(--bg-color); border-color: var(--text-muted); }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="error-wrapper">
+        <div class="error-card">
+            
+            <div class="error-glow"></div>
+
+            <div class="error-content">
+                <i class="fa-solid fa-server fa-3x mb-3" style="color: var(--border-color); opacity: 0.5;"></i>
+                
+                <div class="error-code">500</div>
+                <h2 class="error-title">Sistem Kısa Devre Yaptı!</h2>
+                
+                <p class="error-desc">
+                    Sunucularımız şu an yoğunluktan veya teknik bir aksaklıktan dolayı yanıt veremiyor. 
+                    Mühendislerimiz (yani ben) durumu fark etti ve müdahale ediyor.
+                </p>
+
+                <div class="tech-box">
+                    Error: SERVER_OVERLOAD_EXCEPTION <br> 
+                    Status: CRITICAL_FAILURE 0x500
+                </div>
+
+                <div class="d-flex justify-content-center mt-2">
+                    <a href="/" class="btn btn-home">
+                        <i class="fa-solid fa-house mr-2"></i> Ana Sayfa
+                    </a>
+                    <button onclick="location.reload()" class="btn btn-retry">
+                        <i class="fa-solid fa-rotate-right mr-2"></i> Tekrar Dene
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

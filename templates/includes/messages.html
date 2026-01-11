@@ -1,0 +1,112 @@
+<style>
+    /* --- PREMIUM TOAST CSS --- */
+    
+    .premium-toast {
+        position: relative;
+        min-width: 300px;
+        max-width: 350px;
+        background: var(--card-bg); /* Temaya uyumlu arka plan */
+        border: 1px solid var(--border-color);
+        border-left: 5px solid; /* Sol renk çubuğu için */
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        margin-bottom: 15px;
+        overflow: hidden;
+        animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* Giriş Animasyonu */
+    @keyframes slideInRight {
+        from { transform: translateX(120%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Renk Varyasyonları */
+    .toast-success { border-left-color: #28a745; }
+    .toast-success .toast-icon { color: #28a745; background: rgba(40, 167, 69, 0.1); }
+
+    .toast-danger { border-left-color: #dc3545; }
+    .toast-danger .toast-icon { color: #dc3545; background: rgba(220, 53, 69, 0.1); }
+
+    .toast-warning { border-left-color: #ffc107; }
+    .toast-warning .toast-icon { color: #ffc107; background: rgba(255, 193, 7, 0.1); }
+
+    .toast-info { border-left-color: #17a2b8; }
+    .toast-info .toast-icon { color: #17a2b8; background: rgba(23, 162, 184, 0.1); }
+
+    /* İkon Alanı */
+    .toast-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+
+    /* Mesaj İçeriği */
+    .toast-content {
+        flex-grow: 1;
+        color: var(--text-color);
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    /* Kapat Butonu */
+    .toast-close {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0 5px;
+        transition: color 0.2s;
+        margin-left: 10px;
+        opacity: 0.6;
+    }
+    .toast-close:hover { color: var(--text-color); opacity: 1; }
+
+</style>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+    
+    {% set safe_category = 'danger' if category == 'error' else category %}
+    
+    <div class="premium-toast toast-{{ safe_category }} shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+        
+        <div class="toast-icon">
+            {% if safe_category == 'success' %}
+                <i class="fa-solid fa-check"></i>
+            {% elif safe_category == 'danger' %}
+                <i class="fa-solid fa-xmark"></i>
+            {% elif safe_category == 'warning' %}
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            {% else %}
+                <i class="fa-solid fa-info"></i>
+            {% endif %}
+        </div>
+
+        <div class="toast-content">
+            {{ message }}
+        </div>
+
+        <button type="button" class="toast-close" data-dismiss="toast" aria-label="Close" onclick="this.parentElement.style.display='none'">
+            <i class="fa-solid fa-xmark" style="font-size: 1rem;"></i>
+        </button>
+
+    </div>
+    
+    {% endfor %}
+  {% endif %}
+{% endwith %}

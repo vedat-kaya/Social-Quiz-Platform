@@ -1,0 +1,236 @@
+{% extends "layout.html" %}
+
+{% block title %}Yönetici Paneli | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* Admin Paneline Özel Stil Ayarları (Temaya Duyarlı) */
+    .stat-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-card:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Sol taraftaki renkli şeritler için */
+    .stat-border-primary { border-left: 5px solid #0d6efd; }
+    .stat-border-warning { border-left: 5px solid #ffc107; }
+    .stat-border-success { border-left: 5px solid #198754; }
+
+    .stat-icon { font-size: 2.5rem; margin-bottom: 10px; opacity: 0.8; }
+    .stat-number { font-size: 2.5rem; font-weight: 800; color: var(--text-color); }
+    .stat-label { font-size: 1rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Tablo Düzeni */
+    .admin-table-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        padding: 0; /* Padding'i sıfırladık, tablo tam otursun */
+        overflow: hidden; /* Köşeler taşmasın */
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .table {
+        margin-bottom: 0;
+        color: var(--text-color);
+    }
+
+    .table thead th {
+        background-color: var(--bg-color); /* Başlık hafif farklı olsun */
+        border-bottom: 2px solid var(--border-color);
+        border-top: none;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        padding: 15px;
+    }
+
+    .table td {
+        padding: 15px;
+        vertical-align: middle;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: var(--bg-color); /* Hover rengi */
+        color: var(--text-color);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="row mb-4 mt-3 align-items-center">
+    <div class="col-12 text-center">
+        <h1 class="aralikli-baslik display-5 font-weight-bold" style="color: var(--text-color);">
+            <i class="fa-solid fa-user-shield text-primary"></i> YÖNETİM MERKEZİ
+        </h1>
+        <p class="lead" style="color: var(--text-muted);">Platform istatistikleri ve yönetim araçları.</p>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-4 mb-3">
+        <div class="stat-card stat-border-primary">
+            <i class="fa-solid fa-users stat-icon text-primary"></i>
+            <div class="stat-number">{{ user_count }}</div>
+            <div class="stat-label">Toplam Üye</div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="stat-card stat-border-warning">
+            <i class="fa-solid fa-layer-group stat-icon text-warning"></i>
+            <div class="stat-number">{{ quiz_count }}</div>
+            <div class="stat-label">Oluşturulan Quiz</div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="stat-card stat-border-success">
+            <i class="fa-solid fa-circle-question stat-icon text-success"></i>
+            <div class="stat-number">{{ question_count }}</div>
+            <div class="stat-label">Toplam Soru</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="font-weight-bold" style="color: var(--text-color);">
+                <i class="fa-solid fa-clock-rotate-left text-info"></i> Son Eklenenler
+            </h5>
+        </div>
+        
+        <div class="admin-table-card">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Quiz Detayı</th>
+                            <th>Tür</th>
+                            <th class="text-right">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for quiz in latest_quizzes %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('quiz_view', quiz_id=quiz.quiz_id) }}" target="_blank" 
+                                   class="text-decoration-none font-weight-bold" 
+                                   style="color: var(--text-color);">
+                                    {{ quiz.title | truncate(30) }}
+                                </a>
+                                <br>
+                                <small style="color: var(--text-muted);">
+                                    <i class="fa-regular fa-clock"></i> {{ quiz.created_at }}
+                                </small>
+                            </td>
+                            <td>
+                                {% if quiz.quiz_type == 'turnuva' %}
+                                    <span class="badge" style="background-color: #6f42c1; color: white;">
+                                        <i class="fa-solid fa-trophy"></i> Turnuva
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-info text-white"><i class="fa-solid fa-list"></i> Test</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-right">
+                                <a href="{{ url_for('delete_quiz_admin', quiz_id=quiz.quiz_id) }}" 
+                                   class="btn btn-sm btn-outline-danger"
+                                   style="border-radius: 20px;"
+                                   onclick="return confirm('Bu quizi silmek istediğine emin misin? Geri alınamaz!');">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="font-weight-bold" style="color: var(--text-color);">
+                <i class="fa-solid fa-users-gear text-primary"></i> Üye Yönetimi
+            </h5>
+        </div>
+
+        <div class="admin-table-card">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Kullanıcı</th>
+                            <th>Rol</th>
+                            <th class="text-right">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ url_for('static', filename='uploads/profile_pics/' + user.profile_pic_url) }}" 
+                                         style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; margin-right: 12px; border: 2px solid var(--border-color);">
+                                    
+                                    <div>
+                                        <span class="d-block font-weight-bold" style="color: var(--text-color);">{{ user.username }}</span>
+                                        <small style="color: var(--text-muted);">{{ user.email }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {% if user.is_admin %}
+                                    <span class="badge badge-danger">Yönetici</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">Üye</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-right">
+                                {% if not user.is_admin %}
+                                <div class="btn-group" role="group">
+                                    <a href="{{ url_for('delete_user_admin', user_id=user.id) }}" 
+                                       class="btn btn-sm btn-outline-warning"
+                                       title="Kullanıcıyı Yasakla"
+                                       onclick="return confirm('Bu kullanıcıyı yasaklamak istediğine emin misin?');">
+                                        <i class="fa-solid fa-ban"></i>
+                                    </a>
+
+                                    <form action="{{ url_for('hard_delete_user', user_id=user.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" 
+                                                title="Kalıcı Olarak Sil"
+                                                onclick="return confirm('DİKKAT! Bu kullanıcıyı veritabanından tamamen siliyorsun. Geri dönüşü yoktur!');">
+                                            <i class="fa-solid fa-user-xmark"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                {% else %}
+                                    <i class="fa-solid fa-shield-halved text-success" title="Yönetici"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+
+{% block title %}Kazanan: {{ winner.question_text }} | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- NETFLIX / CINEMATIC STYLE (KARE VERSİYON) --- */
+    
+    body {
+        background-color: #141414; 
+        color: #fff;
+        overflow-x: hidden;
+    }
+
+    /* Arka Plandaki Dev Spotlight */
+    .spotlight {
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80vw; height: 80vh;
+        background: radial-gradient(circle, rgba(229, 9, 20, 0.15) 0%, transparent 70%);
+        z-index: 0; pointer-events: none;
+    }
+
+    .winner-container {
+        position: relative; z-index: 10;
+        min-height: 85vh;
+        display: flex; flex-direction: column;
+        justify-content: center; align-items: center;
+        text-align: center; padding: 30px 15px;
+    }
+
+    .top-label {
+        font-size: 1rem; letter-spacing: 3px; text-transform: uppercase;
+        color: rgba(255,255,255,0.7); margin-bottom: 20px; font-weight: 600;
+    }
+
+    /* --- YENİ KARE RESİM ALANI --- */
+    .hero-image-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 400px; /* Çok büyümesin */
+        aspect-ratio: 1 / 1; /* TAM KARE OLSUN */
+        border-radius: 20px; /* Köşeleri yuvarla */
+        box-shadow: 0 20px 60px rgba(0,0,0,0.6); /* Daha net gölge */
+        margin-bottom: 30px;
+        /* Kenarları jilet gibi yapmak için: */
+        overflow: hidden; 
+        border: 2px solid rgba(229, 9, 20, 0.5); /* İnce kırmızı çerçeve */
+        
+        animation: fadeZoom 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        transition: transform 0.4s ease, border-color 0.4s ease;
+    }
+    
+    .hero-image-wrapper:hover {
+        transform: scale(1.02);
+        border-color: #E50914; /* Hoverda çerçeve parlasın */
+    }
+
+    .hero-img {
+        width: 100%; height: 100%;
+        object-fit: cover; /* Kareye tam otursun */
+        display: block;
+    }
+    /* --------------------------- */
+
+    /* Kazanan İsmi */
+    .winner-name {
+        font-size: 3rem; font-weight: 900; margin-bottom: 15px;
+        line-height: 1.1; letter-spacing: -1px;
+        animation: slideUp 0.8s ease forwards 0.2s; opacity: 0;
+        text-shadow: 0 0 25px rgba(229, 9, 20, 0.6);
+    }
+
+    /* Butonlar */
+    .btn-netflix-primary {
+        background-color: #E50914; color: white; font-weight: 700;
+        padding: 12px 40px; border-radius: 4px; font-size: 1.1rem;
+        border: none; transition: all 0.2s; display: inline-flex; align-items: center;
+    }
+    .btn-netflix-primary:hover {
+        background-color: #f40612; transform: scale(1.03); color: white;
+        box-shadow: 0 0 30px rgba(229, 9, 20, 0.5);
+    }
+
+    .btn-netflix-secondary {
+        background-color: rgba(255,255,255,0.08); color: white; font-weight: 600;
+        padding: 12px 30px; border-radius: 4px; font-size: 1.1rem; margin-right: 15px;
+        transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px);
+    }
+    .btn-netflix-secondary:hover {
+        background-color: rgba(255,255,255,0.2); color: white; border-color: white;
+    }
+
+    @keyframes fadeZoom {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<canvas id="confetti"></canvas>
+<div class="spotlight"></div>
+
+<div class="container winner-container">
+    
+    <div class="top-label"><i class="fa-solid fa-trophy text-danger mr-2"></i> Turnuva Şampiyonu</div>
+
+    <div class="hero-image-wrapper">
+        <img src="{{ url_for('static', filename='uploads/quiz_images/' + winner.image_url) }}" class="hero-img">
+    </div>
+
+    <h1 class="winner-name">{{ winner.question_text }}</h1>
+    
+
+    <div style="animation: slideUp 0.8s ease forwards 0.6s; opacity: 0;">
+        <a href="{{ url_for('index') }}" class="btn btn-netflix-secondary">
+            <i class="fa-solid fa-house mr-2"></i> Ana Sayfa
+        </a>
+        <a href="/quiz/{{ quiz.quiz_id }}" class="btn btn-netflix-primary shadow">
+            <i class="fa-solid fa-rotate-right mr-2"></i> Tekrar Oyna
+        </a>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+    window.onload = function() {
+        var count = 200;
+        var defaults = { origin: { y: 0.7 } };
+
+        function fire(particleRatio, opts) {
+            confetti(Object.assign({}, defaults, opts, {
+                particleCount: Math.floor(count * particleRatio)
+            }));
+        }
+
+        fire(0.25, { spread: 26, startVelocity: 55, colors: ['#E50914', '#ffffff'] });
+        fire(0.2, { spread: 60, colors: ['#E50914', '#ffffff'] });
+        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8, colors: ['#E50914', '#ffffff'] });
+        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2, colors: ['#E50914', '#ffffff'] });
+        fire(0.1, { spread: 120, startVelocity: 45, colors: ['#E50914', '#ffffff'] });
+    };
+</script>
+
+{% endblock %}

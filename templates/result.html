@@ -1,0 +1,182 @@
+{% extends "layout.html" %}
+
+{% block title %}Sonucun: {{ result.title }} | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- RESULT PREMIUM STİLİ --- */
+    
+    .result-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        position: relative;
+        z-index: 2; /* Konfetilerin önünde durması için */
+    }
+
+    .result-image-wrapper {
+        position: relative;
+        height: 400px;
+        overflow: hidden;
+    }
+
+    .result-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 3s ease;
+    }
+    /* Hafif zoom efekti */
+    .result-card:hover .result-img { transform: scale(1.05); }
+
+    .result-overlay {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 100%;
+        background: linear-gradient(to top, var(--card-bg) 0%, transparent 60%);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 30px;
+    }
+
+    .result-title {
+        font-size: 3rem;
+        font-weight: 900;
+        text-align: center;
+        color: var(--text-color);
+        text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        letter-spacing: -1px;
+        margin: 0;
+        line-height: 1.1;
+    }
+
+    .result-badge {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        box-shadow: 0 5px 15px rgba(255, 123, 0, 0.4);
+    }
+
+    .result-body {
+        padding: 40px;
+        text-align: center;
+    }
+
+    .result-desc {
+        font-size: 1.25rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 40px;
+        font-weight: 500;
+    }
+
+    /* Butonlar */
+    .btn-action {
+        border-radius: 50px;
+        padding: 12px 30px;
+        font-weight: 700;
+        transition: all 0.2s;
+        margin: 5px;
+        border: 2px solid transparent;
+    }
+    
+    .btn-retry {
+        background-color: var(--primary-color);
+        color: white;
+        box-shadow: 0 5px 15px rgba(255, 123, 0, 0.3);
+    }
+    .btn-retry:hover { transform: translateY(-3px); color: white; background-color: #e06b00; }
+
+    .btn-home {
+        background-color: transparent;
+        border-color: var(--border-color);
+        color: var(--text-muted);
+    }
+    .btn-home:hover { border-color: var(--text-color); color: var(--text-color); background-color: var(--bg-color); }
+
+    /* KONFETİ EFEKTİ (CSS ONLY) */
+    .confetti {
+        position: absolute;
+        width: 10px; height: 10px;
+        background-color: #f2d74e;
+        animation: fall linear forwards;
+        z-index: 1; /* Kartın arkasında kalsın */
+    }
+
+    @keyframes fall {
+        to { transform: translateY(100vh) rotate(720deg); }
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div style="position: fixed; top:0; left:0; width:100%; height:100%; pointer-events: none; overflow: hidden; z-index: 0;">
+    {% for i in range(20) %}
+    <div class="confetti" style="left: {{ range(0, 100) | random }}%; animation-duration: {{ range(3, 8) | random }}s; background-color: {{ ['#ff595e', '#ffca3a', '#8ac926', '#1982c4', '#6a4c93'] | random }};"></div>
+    {% endfor %}
+</div>
+
+<div class="container mt-5 mb-5 position-relative">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <div class="result-card">
+                
+                <div class="result-image-wrapper">
+                    <div class="result-badge"><i class="fa-solid fa-star"></i> SENİN SONUCUN</div>
+
+                    {% if result.image_url and result.image_url != 'default_result.png' %}
+                        <img src="{{ url_for('static', filename='uploads/quiz_covers/' + result.image_url) }}" class="result-img">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='uploads/quiz_covers/' + quiz.cover_image_url) }}" class="result-img">
+                    {% endif %}
+
+                    <div class="result-overlay">
+                        <h1 class="result-title">{{ result.title }}</h1>
+                    </div>
+                </div>
+
+                <div class="result-body">
+                    
+                    <p class="result-desc">
+                        {{ result.description }}
+                    </p>
+
+                    <div class="d-flex justify-content-center flex-wrap mt-4">
+                        <a href="/quiz/{{ quiz.quiz_id }}" class="btn btn-action btn-retry">
+                            <i class="fa-solid fa-rotate-right mr-2"></i> TEKRAR ÇÖZ
+                        </a>
+                        
+                        <a href="{{ url_for('index') }}" class="btn btn-action btn-home">
+                            <i class="fa-solid fa-house mr-2"></i> ANA SAYFA
+                        </a>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-top border-secondary" style="border-color: var(--border-color) !important;">
+                        <small class="text-muted font-weight-bold text-uppercase d-block mb-3">Sonucunu Paylaş</small>
+                        <button class="btn btn-sm btn-outline-success rounded-circle mx-1" style="width: 40px; height: 40px;"><i class="fa-brands fa-whatsapp"></i></button>
+                        <button class="btn btn-sm btn-outline-info rounded-circle mx-1" style="width: 40px; height: 40px;"><i class="fa-brands fa-twitter"></i></button>
+                        <button class="btn btn-sm btn-outline-primary rounded-circle mx-1" style="width: 40px; height: 40px;"><i class="fa-brands fa-facebook-f"></i></button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

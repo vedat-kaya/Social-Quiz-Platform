@@ -1,0 +1,258 @@
+{% extends "layout.html" %}
+
+{% block title %}İçerik Stüdyosu | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- MANAGER STUDIO STİLİ --- */
+    
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .page-title {
+        font-weight: 800;
+        color: var(--text-color);
+        margin: 0;
+        font-size: 1.8rem;
+    }
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+
+    /* Yönetim Kartı */
+    .manage-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .manage-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        border-color: var(--primary-color);
+    }
+
+    /* Resim Alanı */
+    .card-img-top-wrapper {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+    }
+    .card-img-top {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .manage-card:hover .card-img-top {
+        transform: scale(1.1); /* Zoom efekti */
+    }
+
+    /* Kategori Rozeti (Resmin Üstünde) */
+    .category-badge {
+        position: absolute;
+        top: 15px; left: 15px;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* Kart Gövdesi */
+    .card-body-custom {
+        padding: 20px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .quiz-title {
+        font-weight: 800;
+        color: var(--text-color);
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        text-decoration: none;
+        display: block;
+        transition: color 0.2s;
+    }
+    .quiz-title:hover { color: var(--primary-color); text-decoration: none; }
+
+    .quiz-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto; /* En alta it */
+        padding-top: 15px;
+        border-top: 1px dashed var(--border-color);
+    }
+
+    .meta-stat {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
+    .meta-stat i { margin-right: 5px; }
+
+    /* Alt Aksiyon Barı */
+    .card-actions {
+        background-color: var(--bg-color);
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .btn-action {
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 8px 12px;
+        transition: all 0.2s;
+    }
+
+    /* Silme Butonu Özel */
+    .btn-delete {
+        width: 35px; height: 35px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        background: transparent;
+        transition: all 0.2s;
+    }
+    .btn-delete:hover {
+        background-color: #dc3545;
+        color: white;
+        transform: rotate(90deg);
+    }
+
+    /* Yeni Ekle Butonu */
+    .btn-add-new {
+        background: linear-gradient(90deg, var(--primary-color), #ff9f43);
+        border: none; color: white;
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 700;
+        box-shadow: 0 5px 15px rgba(255, 123, 0, 0.3);
+        transition: transform 0.2s;
+    }
+    .btn-add-new:hover { transform: translateY(-2px); color: white; text-decoration: none; }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4 mb-5">
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title"><i class="fa-solid fa-layer-group text-primary mr-2"></i> İçerik Stüdyosu</h1>
+            <p class="page-subtitle">Paylaştığın tüm quizleri buradan yönet.</p>
+        </div>
+        
+        <a href="/create_quiz" class="btn-add-new" style="color: #ffffff !important;">
+            <i class="fa-solid fa-plus mr-2"></i> Yeni Oluştur
+        </a>
+    </div>
+
+    <div class="row">
+        {% if quizzes %}
+            {% for quiz in quizzes %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                
+                <div class="manage-card">
+                    
+                    <div class="card-img-top-wrapper">
+                        <span class="category-badge">{{ quiz.category }}</span>
+                        
+                        <a href="{{ url_for('quiz_detail', quiz_id=quiz.quiz_id) }}">
+                            <img src="{{ url_for('static', filename='uploads/quiz_covers/' + quiz.cover_image_url) }}" class="card-img-top">
+                        </a>
+                    </div>
+
+                    <div class="card-body-custom">
+                        <a href="{{ url_for('quiz_detail', quiz_id=quiz.quiz_id) }}" class="quiz-title">
+                            {{ quiz.title }}
+                        </a>
+                        
+                        <div class="quiz-meta">
+                            <span class="meta-stat" title="Oluşturulma Tarihi">
+                                <i class="fa-regular fa-calendar"></i> {{ quiz.created_at.strftime('%d.%m.%Y') }}
+                            </span>
+                            
+                            <div class="d-flex">
+                                <span class="meta-stat mr-3" title="Görüntülenme">
+                                    <i class="fa-solid fa-eye text-info"></i> {{ quiz.views }}
+                                </span>
+                                <span class="meta-stat" title="Beğeni">
+                                    <i class="fa-solid fa-heart text-danger"></i> {{ quiz.likes }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        
+                        <div class="btn-group">
+                            <a href="{{ url_for('edit_quiz', id=quiz.quiz_id) }}" class="btn btn-sm btn-outline-primary btn-action mr-2">
+                                <i class="fa-solid fa-pen mr-1"></i> Düzenle
+                            </a>
+                            <a href="{{ url_for('add_questions', quiz_id=quiz.quiz_id) }}" class="btn btn-sm btn-outline-success btn-action">
+                                <i class="fa-solid fa-list-check mr-1"></i> Sorular
+                            </a>
+                        </div>
+
+                        <form action="{{ url_for('delete_quiz', id=quiz.quiz_id) }}" method="POST" class="d-inline">
+                            <button type="submit" class="btn-delete" 
+                                    onclick="return confirm('{{ quiz.title }} testini silmek istediğine emin misin? Bu işlem geri alınamaz!');" 
+                                    title="Testi Sil">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        
+        {% else %}
+            <div class="col-12">
+                <div class="text-center py-5" style="background-color: var(--card-bg); border-radius: 20px; border: 2px dashed var(--border-color);">
+                    <div style="width: 80px; height: 80px; background: rgba(255, 123, 0, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+                        <i class="fa-solid fa-wand-magic-sparkles fa-3x" style="color: var(--primary-color);"></i>
+                    </div>
+                    
+                    <h3 style="color: var(--text-color); font-weight: 800;">Sahne Senin!</h3>
+                    <p class="text-muted mb-4">Henüz hiç içerik oluşturmamışsın. İlk testini oluştur ve topluluğa katıl.</p>
+                    
+                    <a href="/create_quiz" class="btn btn-primary px-5 py-3 shadow" style="border-radius: 50px; font-weight: 800;">
+                        <i class="fa-solid fa-rocket mr-2"></i> İLK QUİZ'İNİ OLUŞTUR
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,213 @@
+{% extends "layout.html" %}
+{% from "includes/_formhelpers.html" import render_field %}
+
+{% block title %}Quiz Düzenle | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- EDIT STUDIO STİLİ --- */
+    
+    .create-quiz-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Başlık Alanı */
+    .create-header {
+        background: var(--bg-color);
+        padding: 30px;
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .create-header h2 { 
+        font-size: 1.8rem; font-weight: 800; color: var(--text-color); letter-spacing: -1px; 
+    }
+    .create-header p { color: var(--text-muted); margin-top: 5px; }
+
+    /* Form Gövdesi */
+    .card-body-custom { padding: 40px; flex-grow: 1; }
+
+    /* Başlıklar */
+    .form-section-title {
+        color: var(--text-color);
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex; align-items: center;
+    }
+    .form-section-title i { 
+        color: var(--primary-color); 
+        margin-right: 10px; 
+        background: rgba(255, 123, 0, 0.1); padding: 8px; border-radius: 8px; 
+    }
+
+    /* Inputlar */
+    .form-control-lg-custom {
+        background-color: var(--bg-color) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-color) !important;
+        border-radius: 12px; padding: 15px; font-size: 1rem;
+    }
+    .form-control-lg-custom:focus {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15) !important;
+    }
+
+    label { color: var(--text-color); font-weight: 600; margin-bottom: 8px; }
+
+    /* Dosya Yükleme Alanı */
+    .custom-file-upload-box {
+        border: 2px dashed var(--border-color);
+        border-radius: 15px;
+        padding: 15px;
+        text-align: center;
+        background-color: var(--bg-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    .custom-file-upload-box:hover {
+        border-color: var(--primary-color);
+        background-color: rgba(255, 123, 0, 0.05);
+    }
+
+    /* --- YENİ: INSTAGRAM TARZI MEVCUT RESİM --- */
+    .current-image-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+    .current-image-circle {
+        width: 160px; height: 160px; /* Sabit boyut */
+        border-radius: 50%; /* Tam yuvarlak */
+        object-fit: cover; /* Resmi bozmadan sığdır */
+        border: 5px solid var(--card-bg); /* İç çerçeve (boşluk hissi) */
+        box-shadow: 0 0 0 4px var(--primary-color); /* Dış turuncu halka (Insta story gibi) */
+        margin-bottom: 15px;
+    }
+    .current-image-label {
+        color: var(--text-muted); font-weight: 600; font-size: 0.9rem;
+    }
+
+    /* Butonlar */
+    .btn-guncelle {
+        border-radius: 50px; font-weight: 700; padding: 12px 40px; font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(255, 123, 0, 0.3); transition: transform 0.2s;
+    }
+    .btn-guncelle:hover { transform: scale(1.02); }
+    
+    .btn-iptal {
+        border-radius: 50px; padding: 12px 30px; font-weight: 600;
+        color: var(--text-muted); background: transparent; border: 1px solid var(--border-color);
+    }
+    .btn-iptal:hover { background: var(--bg-color); color: var(--text-color); }
+
+    /* Select Box */
+    select.form-control {
+        height: 50px !important;
+        background-color: var(--bg-color) !important;
+        color: var(--text-color) !important;
+        border-color: var(--border-color) !important;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="row justify-content-center" style="margin-top: 2rem; margin-bottom: 5rem;">
+    <div class="col-lg-10">
+        
+        <div class="create-quiz-card">
+            
+            <div class="create-header">
+                <h2 class="aralikli-baslik mb-0">İÇERİK DÜZENLEME STÜDYOSU</h2>
+                <p>Quiz: <strong style="color: var(--primary-color);">{{ quiz.title }}</strong></p>
+            </div>
+
+            <div class="card-body-custom">
+                
+                <form method="post" enctype="multipart/form-data">
+                    
+                    <div class="row">
+                        
+                        <div class="col-lg-7 d-flex flex-column pr-lg-5">
+                            
+                            <h5 class="form-section-title">
+                                <i class="fa-solid fa-pen-nib"></i> Quiz Detayları
+                            </h5>
+                            
+                            <div class="form-group mb-4">
+                                <label>Quiz Başlığı</label>
+                                {{ render_field(form.title, class="form-control form-control-lg-custom") }}
+                            </div>
+
+                            <div class="form-group mb-4 flex-grow-1">
+                                <label>Açıklama <span class="text-muted font-weight-normal ml-1">(İsteğe Bağlı)</span></label>
+                                {{ render_field(form.description, rows="8", class="form-control form-control-lg-custom", style="min-height: 200px;") }}
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-5 pl-lg-4 border-left" style="border-color: var(--border-color) !important;">
+                            
+                            <h5 class="form-section-title">
+                                <i class="fa-solid fa-image"></i> Kapak Görseli
+                            </h5>
+
+                            <div class="current-image-wrapper">
+                                <img src="{{ url_for('static', filename='uploads/quiz_covers/' + quiz.cover_image_url) }}" 
+                                     class="current-image-circle" alt="Mevcut Kapak">
+                                <span class="current-image-label">
+                                    <i class="fa-solid fa-circle-check text-success mr-1"></i> Mevcut Görsel
+                                </span>
+                            </div>
+                            
+                            <div class="custom-file-upload-box mb-4">
+                                <i class="fa-solid fa-camera-rotate" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 10px;"></i>
+                                <h6 class="font-weight-bold mb-1">Değiştirmek için Yükle</h6>
+                                <p class="text-muted small mb-0">Boş bırakırsan eski resim kalır.</p>
+                                <input type="file" name="cover_image" class="form-control-file" 
+                                       style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                            </div>
+
+                            <h5 class="form-section-title">
+                                <i class="fa-solid fa-tags"></i> Kategori
+                            </h5>
+                            <div class="form-group mb-4">
+                                {{ form.category(class="form-control") }}
+                            </div>
+
+                            <div style="display:none;">
+                                {{ form.quiz_type }}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-12 text-right d-flex justify-content-end align-items-center">
+                            <a href="{{ url_for('paylastiklarim') }}" class="btn btn-iptal mr-3">İptal</a>
+                            
+                            <button type="submit" class="btn btn-primary btn-guncelle">
+                                <i class="fa-solid fa-floppy-disk"></i> Değişiklikleri Kaydet
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div> 
+    </div> 
+</div> 
+
+{% endblock body %}

@@ -1,0 +1,746 @@
+/* ==========================================================================
+   Project: Sorsana.com
+   Description: Main Stylesheet - FINAL FIXED VERSION
+   Theme: Dark Mode (Fixed Orange/Grey), Layout Preserved
+   ========================================================================== */
+
+/* ==========================================================================
+   1. VARIABLES & COLOR PALETTE
+   ========================================================================== */
+:root {
+    /* --- ANA RENK DEĞİŞİMİ: Mavi yerine TURUNCU --- */
+    --primary-color: #ff7b00;    /* Turuncu */
+    --primary-hover: #e06c00;    /* Koyu Turuncu */
+
+    /* Diğer Renkler */
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+
+    /* Backgrounds */
+    --bg-dark-primary: #121212;   /* Sayfa Arkası */
+    --bg-dark-secondary: #1a1a1a; /* Kart Arkası */
+
+    /* Typography */
+    --text-light: #EAEAEA;
+    --text-white: #FFFFFF;
+    --text-muted-dark: #A9A9A9;
+
+    /* Varsayılan Tema Renkleri (Açık) */
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #212529;
+    --border-color: #dee2e6;
+}
+
+/* --- KOYU TEMA AYARLARI --- */
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --card-bg: #1a1a1a;
+    --text-color: #e0e0e0;
+    --border-color: #333333;
+}
+
+/* --- DÜZELTME 1: BOŞLUK AYARI --- */
+/* 5vw yerine standart piksel kullandık, böylece içerik sıkışmayacak */
+.container-fluid {
+    padding-left: 5vw;
+    padding-right: 5vw;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+/* ==========================================================================
+   2. BODY & GLOBAL STYLES
+   ========================================================================== */
+body {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    font-family: 'Open Sans', sans-serif;
+    padding-top: 70px;
+    margin-bottom: 100px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Link Ayarları - Varsayılan */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+/* --- DÜZELTME 2: RENK ÇAKIŞMASI --- */
+/* Vitrin başlıklarını (.showcase-title) bu kuraldan HARİÇ tutuyoruz */
+[data-theme="dark"] a:not(.btn):not(.nav-link):not(.showcase-title):not(.cat-chip) {
+    color: var(--primary-color) !important;
+}
+
+/* ==========================================================================
+   3. NAVBAR (SABİT KOYU GRİ)
+   ========================================================================== */
+.navbar {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    min-height: 80px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.navbar .navbar-brand {
+    font-size: 1.5rem;
+    color: #ffffff !important;
+}
+
+.navbar-logo {
+    height: 40px;
+    width: auto;
+    vertical-align: middle;
+}
+
+.slogan {
+    font-family: 'Nabla', cursive;
+    font-size: 2rem;
+    letter-spacing: normal;
+    text-transform: none;
+    font-weight: 400;
+}
+
+/* Navbar Linkleri */
+.navbar a, .navbar .nav-link {
+    color: #ffffff !important;
+    font-weight: 700;
+    transition: color 0.15s ease-in-out;
+}
+
+.navbar a:hover, .navbar .nav-link:hover {
+    color: #cccccc !important;
+}
+
+.navbar .btn {
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   4. TYPOGRAPHY & HEADERS
+   ========================================================================== */
+.aralikli-baslik {
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-color) !important;
+}
+
+/* ==========================================================================
+   5. AUTH PAGES (LOGIN / REGISTER)
+   ========================================================================== */
+.login-page-row {
+    margin-right: -15px; margin-left: -15px;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding-bottom: 50px;
+}
+
+.login-page-row .col-md-6 {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.login-page-text-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 50px;
+}
+
+@media (max-width: 767.98px) {
+    .login-page-row .col-md-6 { padding-left: 15px; padding-right: 15px; }
+    .login-page-row .col-md-6:first-child { margin-bottom: 2rem; }
+}
+
+.login-container {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    max-width: 550px;
+    width: 100%;
+    padding: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-kendi-etiketim {
+    width: 100%; display: block; margin: 0 auto 5px auto;
+    text-align: left; color: var(--text-color);
+    font-size: 1.2rem; font-weight: 700;
+}
+
+.login-container .form-control {
+    padding: 0.8rem 1rem; font-size: 0.95rem; height: auto;
+    border-radius: 10px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color); margin-bottom: 1rem;
+}
+
+.login-container .form-control:focus {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(255, 123, 0, 0.25);
+}
+
+.login-container .btn-primary {
+    padding: 0.8rem; font-size: 1rem; width: 100%; display: block;
+    border-radius: 50px; font-weight: 700;
+    background: var(--primary-color) !important;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4);
+    transition: transform 0.2s ease;
+}
+
+.login-container .btn-primary:hover {
+    background: var(--primary-hover) !important;
+    transform: scale(1.02);
+}
+
+.sifre-unuttum-link, .hesabiniz-varmi-link {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.sifre-unuttum-link:hover, .hesabiniz-varmi-link:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   6. TOURNAMENT MODE (VS)
+   ========================================================================== */
+.vs-container {
+    width: 100%;
+    min-height: 75vh;
+    display: flex;
+    margin-top: 20px;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.vs-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent;
+    transition: background 0.2s ease;
+}
+
+.vs-pane:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.vs-pane-left {
+    border-right: 2px solid var(--border-color);
+}
+
+.vs-image {
+    max-width: 85%;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 12px;
+    transition: transform 0.2s ease-out;
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.vs-pane:hover .vs-image {
+    transform: scale(1.02);
+}
+
+.vs-name {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-align: center;
+    color: var(--text-color);
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    z-index: 2;
+    padding: 0 10px;
+}
+
+@media (max-width: 768px) {
+    .vs-container {
+        flex-direction: column;
+        min-height: auto;
+    }
+    .vs-pane {
+        width: 100%;
+        padding: 30px 0;
+        border-bottom: 2px solid var(--border-color);
+    }
+    .vs-pane-left {
+        border-right: none;
+    }
+    .vs-image {
+        max-height: 300px;
+    }
+}
+
+/* ==========================================================================
+   7. CLASSIC QUIZ MODE
+   ========================================================================== */
+.test-karti {
+    width: 90%;
+    max-width: 1200px;
+    min-height: 80vh;
+    margin: 40px auto;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color);
+}
+
+.gizli-radio { display: none; }
+
+.secim-karti {
+    display: block;
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    position: relative;
+    height: 100%;
+}
+
+.secim-karti:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.gizli-radio:checked + .secim-karti {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 123, 0, 0.2);
+}
+
+.secim-karti i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.secim-baslik {
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: block;
+}
+
+/* ==========================================================================
+   8. HOME PAGE & CARDS
+   ========================================================================== */
+.hero-box {
+    background: var(--card-bg) !important;
+    border: none;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- QUIZ KARTLARI --- */
+.quiz-card {
+    background-color: var(--card-bg) !important;
+    border: none !important;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.quiz-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.quiz-card-img-wrapper {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.quiz-card-img {
+    height: 100% !important;
+    width: 100%;
+    object-fit: cover;
+    border-bottom: none;
+    transition: transform 0.5s ease;
+}
+
+.quiz-card:hover .quiz-card-img {
+    transform: scale(1.1);
+}
+
+.card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.quiz-card h5 {
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: var(--text-color) !important;
+    font-size: 1.1rem;
+}
+
+.quiz-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.quiz-info-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+@media (min-width: 992px) {
+    .col-lg-five { flex: 0 0 20%; max-width: 20%; }
+}
+
+/* ==========================================================================
+   9. LEADERBOARD
+   ========================================================================== */
+.podium-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 15px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.podium-card {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    width: 200px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+}
+
+.podium-card:hover { transform: translateY(-10px); }
+
+.podium-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--card-bg);
+    margin-bottom: 10px;
+}
+
+.rank-1 { order: 2; height: 280px; border: 2px solid #FFD700; }
+.rank-1 .podium-avatar { border-color: #FFD700; }
+.rank-1 .rank-badge { color: #FFD700; font-size: 2rem; }
+
+.rank-2 { order: 1; height: 240px; border: 2px solid #C0C0C0; }
+.rank-2 .podium-avatar { border-color: #C0C0C0; }
+.rank-2 .rank-badge { color: #C0C0C0; font-size: 1.8rem; }
+
+.rank-3 { order: 3; height: 220px; border: 2px solid #CD7F32; }
+.rank-3 .podium-avatar { border-color: #CD7F32; }
+.rank-3 .rank-badge { color: #CD7F32; font-size: 1.6rem; }
+
+.rank-list-item {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    transition: 0.2s;
+    border-left: 5px solid transparent;
+}
+
+.rank-list-item:hover {
+    transform: scale(1.02);
+    border-left: 5px solid var(--primary-color);
+}
+
+.rank-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 40px;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   10. FOOTER
+   ========================================================================== */
+.site-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+    background-color: #1a1a1a;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.site-footer a {
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 600;
+    color: #ccc;
+}
+
+.site-footer a:hover { color: var(--primary-color); }
+
+@media (max-width: 768px) {
+    .site-footer { text-align: center !important; }
+}
+
+/* ==========================================================================
+   11. QUIZ DETAIL / LOBBY
+   ========================================================================== */
+.mod-karti {
+    display: flex;
+    align-items: center;
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.mod-karti:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.disabled-mode {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+}
+
+.icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.arrow-icon {
+    margin-left: auto;
+    color: var(--text-muted);
+    transition: transform 0.3s;
+}
+
+.mod-karti:hover .arrow-icon {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+/* ==========================================================================
+   12. YENİ EKLENENLER
+   ========================================================================== */
+
+/* Google Butonu */
+.btn-google {
+    display: flex; align-items: center; justify-content: center;
+    color: #333333 !important;
+    background-color: #ffffff !important;
+    width: 100%; padding: 12px;
+    border-radius: 50px; border: 1px solid #ddd;
+    font-weight: 700; margin-top: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-decoration: none !important;
+}
+
+.btn-google:hover {
+    background-color: #f8f9fa !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    color: #000000 !important;
+}
+
+.btn-google img {
+    width: 24px; height: 24px; margin-right: 10px; display: block;
+}
+
+/* --- TURUNCU BUTONLAR (Genel) --- */
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+}
+
+/* --- BOOTSTRAP ÇAKIŞMA ENGELLEYİCİ --- */
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .bg-light {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .text-dark {
+    color: var(--text-color) !important;
+}
+
+/* ==========================================================================
+   KART YÜKSEKLİK AYARI
+   ========================================================================== */
+.quiz-card .card-body {
+    min-height: 200px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.quiz-card .card-title {
+    margin-bottom: 1rem;
+    min-height: 50px;
+}
+.quiz-card .card-title a {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 4.5rem;
+    line-height: 1.5rem;
+}
+
+/* ==========================================================================
+   NAVBAR & BUTTON INTERACTIONS
+   ========================================================================== */
+.nav-btn-interactive {
+    border-radius: 20px !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.nav-btn-interactive:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+.btn-glow {
+    background: linear-gradient(45deg, #ff7b00, #ffaa00) !important;
+    border: none !important;
+    position: relative;
+    overflow: hidden;
+    color: white !important;
+}
+
+.btn-glow:hover {
+    box-shadow: 0 0 20px rgba(255, 123, 0, 0.6) !important;
+}
+
+.nav-btn-effect {
+    transition: transform 0.2s ease;
+}
+
+.nav-btn-effect:hover {
+    transform: scale(1.1);
+    color: var(--primary-color) !important;
+}
+
+.dropdown-menu {
+    animation: fadeInDown 0.3s ease;
+    display: none;
+}
+.hover-dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.nav-btn-fixed {
+    min-width: 110px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.navbar .btn-light {
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+    border: none;
+}
+.navbar .btn-light:hover {
+    background-color: #e0e0e0 !important;
+}

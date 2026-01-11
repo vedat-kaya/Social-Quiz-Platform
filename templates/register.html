@@ -1,0 +1,304 @@
+{% extends "layout.html" %}
+
+{% block title %}Aramıza Katıl | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- PREMIUM REGISTER STİLİ --- */
+    
+    .register-wrapper {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .register-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 25px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        overflow: hidden;
+        width: 100%;
+        max-width: 1000px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    /* SOL TARAF (GÖRSEL / BİLGİ) */
+    .info-side {
+        background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+        padding: 50px;
+        flex: 1;
+        min-width: 350px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        /* İçerikleri dikey eksende ortalar (Listeyi de ortalar) */
+        align-items: center; 
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Dekoratif Arka Plan */
+    .info-side::before {
+        content: ''; position: absolute; top: -50px; left: -50px;
+        width: 200px; height: 200px; border-radius: 50%;
+        background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+        opacity: 0.1;
+    }
+    .info-side::after {
+        content: ''; position: absolute; bottom: -50px; right: -50px;
+        width: 150px; height: 150px; border-radius: 50%;
+        background: radial-gradient(circle, #E50914 0%, transparent 70%);
+        opacity: 0.1;
+    }
+
+    .brand-title {
+        font-size: 2.5rem; font-weight: 900; color: #fff; margin-bottom: 20px;
+        letter-spacing: -1px; text-align: center;
+    }
+    
+    /* LİSTE AYARLARI (İp gibi dizilmesi için) */
+    .benefit-list { 
+        list-style: none; 
+        padding: 0; 
+        margin: 30px 0; 
+        /* Bu kısım önemli: Liste blok olarak dursa da, kendi içinde sola yaslıdır */
+        display: inline-block; 
+        text-align: left; 
+        width: fit-content; /* İçerik kadar genişlik */
+    }
+
+    .benefit-list li {
+        margin-bottom: 20px; 
+        color: rgba(255,255,255,0.8); 
+        font-size: 1.1rem;
+        display: flex; 
+        align-items: center;
+        /* Mobilde de soldan başlasın, yamulmasın */
+        justify-content: flex-start; 
+    }
+
+    .benefit-list li i {
+        width: 40px; 
+        height: 40px;
+        /* İkonun genişliğini sabitler, asla daralmaz */
+        min-width: 40px; 
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        margin-right: 15px; 
+        color: var(--primary-color);
+        /* Flex yapısında ikonun sıkışıp yamulmasını engeller */
+        flex-shrink: 0; 
+    }
+
+    /* SAĞ TARAF (FORM) */
+    .form-side {
+        flex: 1.2;
+        padding: 50px;
+        background-color: var(--card-bg);
+        min-width: 350px;
+    }
+
+    .form-header h3 { font-weight: 800; color: var(--text-color); margin-bottom: 10px; }
+    .form-header p { color: var(--text-muted); margin-bottom: 30px; }
+
+    /* Input Grubu */
+    .input-group-custom { position: relative; margin-bottom: 20px; }
+    .input-icon {
+        position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+        color: var(--text-muted); z-index: 10; transition: color 0.3s;
+    }
+    
+    .form-control-premium {
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        border-radius: 12px;
+        padding: 15px 15px 15px 45px;
+        width: 100%; transition: all 0.3s; height: 50px;
+    }
+    .form-control-premium:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(255, 123, 0, 0.1);
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        outline: none;
+    }
+    .form-control-premium:focus + .input-icon { color: var(--primary-color); }
+
+    /* Butonlar */
+    .btn-register {
+        background: linear-gradient(90deg, var(--primary-color), #ff9f43);
+        border: none; color: white; font-weight: 800;
+        padding: 15px; border-radius: 50px; width: 100%;
+        text-transform: uppercase; letter-spacing: 1px;
+        box-shadow: 0 10px 20px rgba(255, 123, 0, 0.3);
+        transition: all 0.3s;
+    }
+    .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(255, 123, 0, 0.4);
+    }
+
+    .btn-google-premium {
+        background-color: #fff; color: #333;
+        border: 1px solid #ddd; border-radius: 50px;
+        padding: 12px; width: 100%; font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.2s; text-decoration: none; margin-top: 15px;
+    }
+    .btn-google-premium:hover {
+        background-color: #f8f9fa; transform: translateY(-2px);
+        text-decoration: none; color: #000;
+    }
+    .btn-google-premium img { width: 24px; margin-right: 10px; }
+
+    .login-redirect { text-align: center; margin-top: 25px; color: var(--text-muted); font-size: 0.9rem; }
+    .login-redirect a { color: var(--primary-color); font-weight: 700; text-decoration: none; }
+    .login-redirect a:hover { text-decoration: underline; }
+
+    .form-error { color: #dc3545; font-size: 0.85rem; margin-top: 5px; margin-left: 5px; display: block; }
+
+    /* --- MOBİL DÜZELTMELERİ --- */
+    @media (max-width: 768px) {
+        .register-wrapper { padding: 10px; padding-top: 30px; align-items: flex-start; }
+        .register-card { flex-direction: column; }
+        
+        .info-side { 
+            padding: 30px 20px; 
+            text-align: center; /* Başlıklar ortalı */
+            min-width: auto;
+            width: 100%;
+        }
+        /* LİSTEYİ ORTADA AMA SOLA YASLI TUT */
+        .benefit-list li { 
+            justify-content: flex-start; /* Mobilde de sola yaslı kalsın (alt alta düz dursun) */
+        }
+        
+        .form-side {
+            padding: 30px 20px !important;
+            min-width: auto;
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="register-wrapper">
+    <div class="register-card">
+        
+        <div class="info-side">
+            <h1 class="brand-title">SorSana</h1>
+            <p style="color: rgba(255,255,255,0.7);">Bilgi paylaştıkça, eğlence yarıştıkça çoğalır.</p>
+            
+            <ul class="benefit-list">
+                <li>
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Kendi testlerini ve turnuvalarını oluştur</span>
+                </li>
+                <li>
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Liderlik tablosunda yerini al</span>
+                </li>
+                <li>
+                    <i class="fa-solid fa-users"></i>
+                    <span>Binlerce kişiyle etkileşime geç</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="form-side">
+            <div class="form-header">
+                <h3>Aramıza Katıl</h3>
+                <p>Formu doldurarak saniyeler içinde hesabını oluştur.</p>
+            </div>
+
+            <form method="post">
+                
+                <div class="input-group-custom">
+                    <i class="fa-solid fa-user input-icon"></i>
+                    {{ form.name(class="form-control-premium", placeholder="İsim Soyisim") }}
+                    {% if form.name.errors %}
+                        <span class="form-error">{{ form.name.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="input-group-custom">
+                    <i class="fa-solid fa-at input-icon"></i>
+                    {{ form.username(class="form-control-premium", placeholder="Kullanıcı Adı") }}
+                    {% if form.username.errors %}
+                        <span class="form-error">{{ form.username.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="input-group-custom">
+                    <i class="fa-solid fa-envelope input-icon"></i>
+                    {{ form.email(class="form-control-premium", placeholder="E-Posta Adresi") }}
+                    {% if form.email.errors %}
+                        <span class="form-error">{{ form.email.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="input-group-custom">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    {{ form.password(class="form-control-premium", placeholder="Parola") }}
+                    {% if form.password.errors %}
+                        <span class="form-error">{{ form.password.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="input-group-custom">
+                    <i class="fa-solid fa-key input-icon"></i>
+                    {{ form.confirm(class="form-control-premium", placeholder="Parolayı Doğrula") }}
+                    {% if form.confirm.errors %}
+                        <span class="form-error">{{ form.confirm.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <button type="submit" id="registerBtn" class="btn-register" onclick="loadingEffect()">
+                    KAYIT OL
+                </button>
+
+            </form>
+
+            <div class="text-center my-3">
+                <span style="color: var(--border-color); font-size: 0.9rem;">veya</span>
+            </div>
+
+            <a href="/login/google" class="btn-google-premium">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google Logo">
+                Google ile Devam Et
+            </a>
+
+            <div class="login-redirect">
+                Zaten hesabın var mı? <a href="{{ url_for('login') }}">Giriş Yap</a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+function loadingEffect() {
+    var form = document.querySelector("form");
+    if (form) {
+        var btn = document.getElementById("registerBtn");
+        setTimeout(function(){
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> İŞLENİYOR...';
+            btn.style.opacity = "0.8";
+            btn.style.pointerEvents = "none";
+        }, 100);
+    }
+}
+</script>
+
+{% endblock %}

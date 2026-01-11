@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container text-center" style="margin-top: 100px;">
+    <div class="card shadow-lg p-5" style="border-radius: 20px; background: rgba(255,255,255,0.9);">
+        <div class="mb-4">
+            <i class="fa-solid fa-paper-plane text-primary" style="font-size: 5rem; animation: bounce 2s infinite;"></i>
+        </div>
+        <h2 class="display-5 fw-bold" style="color: #333;">Neredeyse Bitti!</h2>
+        <p class="lead mb-4">
+            Harika! <strong>{{ email }}</strong> adresine bir doğrulama linki gönderdik.
+        </p>
+        <div class="alert alert-info">
+            <i class="fa-solid fa-circle-info"></i> Lütfen gelen kutunu (ve bazen gereksiz/spam klasörünü) kontrol et.
+        </div>
+        <p class="text-muted">Linki tıkladıktan sonra hesabın otomatik olarak aktifleşecektir.</p>
+        <hr>
+        <div class="mt-4">
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg px-5">Giriş Ekranına Dön</a>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-20px);}
+    60% {transform: translateY(-10px);}
+}
+</style>
+{% endblock %}

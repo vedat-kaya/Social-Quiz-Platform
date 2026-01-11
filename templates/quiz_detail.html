@@ -1,0 +1,217 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ quiz.title }} | SorSana{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5 mb-5">
+    
+    <div class="row">
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-lg h-100" style="background-color: var(--card-bg); border-radius: 20px; overflow: hidden; border: 1px solid var(--border-color);">
+                
+                <div class="position-relative">
+                    <img src="{{ url_for('static', filename='uploads/quiz_covers/' + quiz.cover_image_url) }}" 
+                         class="card-img-top" style="height: 350px; object-fit: cover;">
+                    <div class="card-img-overlay d-flex align-items-end p-0">
+                        <div class="w-100 p-4" style="background: linear-gradient(to top, rgba(0,0,0,1), transparent);">
+                            <span class="badge badge-primary px-3 py-2" style="font-size: 0.9rem;">{{ quiz.category }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body d-flex flex-column pt-2">
+                    <h2 class="font-weight-bold mb-2" style="color: var(--text-color); line-height: 1.2;">{{ quiz.title }}</h2>
+                    
+                    <div class="d-flex align-items-center mb-3 mt-2">
+                        <img src="{{ url_for('static', filename='uploads/profile_pics/' + quiz.profile_pic_url) }}" 
+                             class="rounded-circle mr-2" style="width: 35px; height: 35px; border: 2px solid var(--primary-color); object-fit: cover;">
+                        <div>
+                            <small class="text-muted d-block" style="line-height: 1;">Yazar</small>
+                            <a href="/user/{{ quiz.username }}" class="font-weight-bold" style="color: var(--text-color);">@{{ quiz.username }}</a>
+                        </div>
+                    </div>
+
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
+                        {{ quiz.description }}
+                    </p>
+
+                    <div class="d-flex justify-content-between align-items-center p-3 rounded mb-3 mt-auto" style="background-color: var(--bg-color);">
+                        <div class="text-center">
+                            <h5 class="mb-0 font-weight-bold" style="color: var(--text-color);">{{ q_count }}</h5>
+                            <small class="text-muted" style="font-size: 0.75rem;">SEÇENEK</small>
+                        </div>
+                        <div class="text-center border-left pl-3" style="border-color: var(--border-color) !important;">
+                            <h5 class="mb-0 font-weight-bold" style="color: var(--text-color);">{{ quiz.views }}</h5>
+                            <small class="text-muted" style="font-size: 0.75rem;">GÖRÜNTÜLENME</small>
+                        </div>
+                        <div class="text-center border-left pl-3" style="border-color: var(--border-color) !important;">
+                            <h5 class="mb-0 font-weight-bold text-danger">{{ quiz.likes }}</h5>
+                            <small class="text-muted" style="font-size: 0.75rem;">BEĞENİ</small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mb-3">
+                        <a href="/like_quiz/{{ quiz.quiz_id }}" class="btn flex-grow-1 font-weight-bold {{ 'btn-danger' if is_liked else 'btn-outline-danger' }}" style="border-radius: 12px;">
+                            <i class="{{ 'fa-solid' if is_liked else 'fa-regular' }} fa-heart"></i> {{ 'Beğendin' if is_liked else 'Beğen' }}
+                        </a>
+                        
+                        <a href="/save_quiz/{{ quiz.quiz_id }}" class="btn flex-grow-1 font-weight-bold {{ 'btn-light' if is_saved else 'btn-outline-secondary' }}" style="border-radius: 12px;">
+                            <i class="{{ 'fa-solid' if is_saved else 'fa-regular' }} fa-bookmark"></i> {{ 'Kaydedildi' if is_saved else 'Kaydet' }}
+                        </a>
+                    </div>
+
+                    {% if session.get('user_id') == quiz.user_id %}
+                    <div class="admin-controls p-3 rounded" style="border: 1px dashed var(--border-color); background: rgba(255, 123, 0, 0.05);">
+                        <small class="d-block text-muted font-weight-bold mb-2 text-uppercase">Yönetici Paneli</small>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('edit_quiz', id=quiz.quiz_id) }}" class="btn btn-sm btn-outline-info flex-grow-1 font-weight-bold" style="border-radius: 10px;">
+                                <i class="fa-solid fa-pen-to-square"></i> Düzenle
+                            </a>
+
+                            <form action="{{ url_for('delete_quiz', id=quiz.quiz_id) }}" method="POST" class="flex-grow-1 m-0">
+                                <button type="submit" class="btn btn-sm btn-outline-danger w-100 font-weight-bold" 
+                                        onclick="return confirm('Bu testi silmek istediğine emin misin?');"
+                                        style="border-radius: 10px;">
+                                    <i class="fa-solid fa-trash"></i> Sil
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <h3 class="font-weight-bold mb-4 pb-2" style="color: var(--text-color); border-bottom: 1px solid var(--border-color);">
+                <i class="fa-solid fa-gamepad text-primary"></i> Bir Mod Seç ve Başla
+            </h3>
+
+            <div class="row">
+                
+                <div class="col-md-12 mb-4">
+                    <a href="/quiz/{{ quiz.quiz_id }}" class="text-decoration-none">
+                        <div class="game-mode-card active-mode shadow">
+                            <div class="mode-icon bg-warning text-dark">
+                                <i class="fa-solid fa-trophy"></i>
+                            </div>
+                            <div class="mode-info">
+                                <h4 class="mode-title">Turnuva Modu (VS)</h4>
+                                <p class="mode-desc">Seçenekleri teke tek kapıştır, şampiyonu sen belirle!</p>
+                            </div>
+                            <div class="play-btn">
+                                BAŞLA <i class="fa-solid fa-play ml-2"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <a href="/quiz/{{ quiz.quiz_id }}" class="text-decoration-none"> <div class="game-mode-card">
+                            <div class="mode-icon bg-primary text-white">
+                                <i class="fa-solid fa-list-check"></i>
+                            </div>
+                            <div class="mode-info">
+                                <h5 class="mode-title">Klasik Test</h5>
+                                <p class="mode-desc">Soruları bil, skorunu yap.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="game-mode-card disabled">
+                        <div class="mode-icon bg-secondary text-white">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </div>
+                        <div class="mode-info">
+                            <h5 class="mode-title text-muted">Kör Sıralama</h5>
+                            <p class="mode-desc text-muted">Gelen seçeneği sıraya koy, değiştiremezsin!</p>
+                        </div>
+                        <span class="badge badge-dark">Yakında</span>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="game-mode-card disabled">
+                        <div class="mode-icon bg-secondary text-white">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div class="mode-info">
+                            <h5 class="mode-title text-muted">Tier List</h5>
+                            <p class="mode-desc text-muted">S, A, B, C katmanlarına ayır.</p>
+                        </div>
+                        <span class="badge badge-dark">Yakında</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="alert mt-3" style="background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-muted); border-radius: 15px;">
+                <i class="fa-solid fa-share-nodes mr-2"></i> Bu quizin sonucunu arkadaşlarınla paylaşarak meydan okuyabilirsin!
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Oyun Modu Kartları */
+    .game-mode-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .game-mode-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    /* İkon */
+    .mode-icon {
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem;
+        margin-right: 20px;
+        flex-shrink: 0;
+    }
+
+    /* Yazılar */
+    .mode-title { font-weight: 800; color: var(--text-color); margin-bottom: 5px; }
+    .mode-desc { margin: 0; color: var(--text-muted); font-size: 0.9rem; }
+
+    /* Ana Mod (Turnuva) İçin Özel Stil */
+    .active-mode {
+        background: linear-gradient(135deg, var(--card-bg), var(--bg-color));
+        border: 2px solid var(--primary-color);
+    }
+    .active-mode .play-btn {
+        margin-left: auto;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 25px;
+        border-radius: 30px;
+        font-weight: 800;
+        box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4);
+    }
+
+    /* Devre Dışı Modlar */
+    .game-mode-card.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        background-color: rgba(0,0,0,0.02);
+    }
+</style>
+
+{% endblock %}

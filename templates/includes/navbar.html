@@ -1,0 +1,237 @@
+<style>
+    /* MOBİL YAN PANEL (SIDEBAR) - NETFLIX TARZI */
+    .mobile-sidebar {
+        position: fixed;
+        top: 0;
+        right: -300px; /* Ekran dışı */
+        width: 300px;
+        height: 100vh;
+        background-color: #000000; /* Tam Siyah Premium Arkaplan */
+        z-index: 9999;
+        transition: right 0.4s cubic-bezier(0.19, 1, 0.22, 1); /* Çok akıcı kayma */
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid #333;
+    }
+
+    .mobile-sidebar.active {
+        right: 0;
+    }
+
+    /* Arkaplanı Karartan Perde */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8); /* Daha koyu karartma */
+        z-index: 9998;
+        display: none;
+        backdrop-filter: blur(5px);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* Mobil Link Stilleri - Sade ve Büyük */
+    .sidebar-link {
+        color: #e5e5e5;
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-decoration: none;
+        padding: 15px 0;
+        border-bottom: 1px solid #222;
+        display: flex;
+        align-items: center;
+        transition: color 0.3s;
+    }
+
+    .sidebar-link:hover {
+        color: #ff6600; /* Turuncu Hover */
+        text-decoration: none;
+    }
+
+    .sidebar-icon {
+        width: 30px;
+        text-align: left;
+        color: #888;
+    }
+
+    .sidebar-link:hover .sidebar-icon {
+        color: #ff6600;
+    }
+
+    /* Turuncu Hamburger Menü İkonu */
+    .custom-toggler-icon {
+        color: #ff6600; /* NET TURUNCU RENK */
+        font-size: 1.8rem;
+        cursor: pointer;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid px-2 px-lg-4">
+
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="{{ url_for('static', filename='img/Sorsanalogo.gif') }}" alt="Sorsana" style="height: 40px; width: auto;">
+        </a>
+
+        <div class="d-lg-none ml-auto" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars custom-toggler-icon"></i>
+        </div>
+
+        <div class="collapse navbar-collapse d-none d-lg-block">
+
+            <ul class="navbar-nav mr-auto align-items-center">
+                <li class="nav-item dropdown hover-dropdown ml-3">
+                    <a class="nav-link dropdown-toggle text-white font-weight-bold" href="#" role="button" data-toggle="dropdown">
+                        <i class="fa-solid fa-fire text-warning"></i> Popüler
+                    </a>
+                    <div class="dropdown-menu shadow-lg border-0" style="border-radius: 15px; margin-top: 10px; background-color: var(--card-bg);">
+                        <a class="dropdown-item text-center font-weight-bold text-primary" href="/onerilenler">
+                            Tümünü Gör <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto align-items-center">
+                <li class="nav-item mr-3">
+                    <a class="nav-link text-white font-weight-bold nav-btn-effect" href="{{ url_for('leaderboard') }}">
+                        <i class="fa-solid fa-trophy text-warning"></i> Leaderboard
+                    </a>
+                </li>
+
+                {% if session["is_admin"] %}
+                <li class="nav-item mr-3">
+                    <a class="btn btn-sm btn-danger font-weight-bold nav-btn-interactive nav-btn-fixed" href="{{ url_for('admin_panel') }}">
+                        <i class="fa-solid fa-user-shield"></i> YÖNETİM
+                    </a>
+                </li>
+                {% endif %}
+
+                <li class="nav-item mr-3">
+                    <a class="btn btn-sm btn-primary nav-btn-interactive btn-glow nav-btn-fixed" href="/create_quiz">
+                        <i class="fa-solid fa-plus"></i> Oluştur
+                    </a>
+                </li>
+
+                {% if session["logged_in"] %}
+                    <li class="nav-item dropdown hover-dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-toggle="dropdown">
+                            <img src="{{ url_for('static', filename='uploads/profile_pics/' + (session.profile_pic_url or 'default.png')) }}"
+                                 style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%; border: 2px solid var(--primary-color); padding: 2px;">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow-lg" style="border-radius: 15px; margin-top: 10px;">
+                            <a class="dropdown-item" href="/profil"><i class="fa-solid fa-user mr-2 text-primary"></i> Profilim</a>
+                            <a class="dropdown-item" href="/paylastiklarim"><i class="fa-solid fa-layer-group mr-2 text-info"></i> Paylaştıklarım</a>
+                            <a class="dropdown-item text-danger font-weight-bold" href="/logout"><i class="fa-solid fa-right-from-bracket mr-2"></i> Çıkış Yap</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item mr-2">
+                        <a class="btn btn-sm btn-outline-light nav-btn-interactive nav-btn-fixed" href="/login" style="font-weight: 600;">Giriş Yap</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="btn btn-sm btn-light nav-btn-interactive nav-btn-fixed" href="/register" style="font-weight: 700; color: #000;">Kayıt Ol</a>
+                    </li>
+                {% endif %}
+
+                <li class="nav-item pl-3 border-left" style="border-color: rgba(255,255,255,0.2) !important;">
+                    <button class="btn btn-link text-white p-0 nav-btn-effect" onclick="toggleTheme()" style="font-size: 1.2rem;">
+                        <i class="fa-solid fa-moon" id="theme-icon-desktop"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<div class="mobile-sidebar" id="mobileSidebar">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <span class="text-white font-weight-bold h4 mb-0" style="letter-spacing: 1px;">MENÜ</span>
+        <button onclick="toggleSidebar()" class="btn text-white p-0" style="font-size: 1.5rem;">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    {% if session["logged_in"] %}
+        <div class="d-flex align-items-center mb-4 pb-4 border-bottom border-secondary">
+            <img src="{{ url_for('static', filename='uploads/profile_pics/' + (session.profile_pic_url or 'default.png')) }}"
+                 style="width: 55px; height: 55px; object-fit: cover; border-radius: 50%; border: 2px solid #ff6600;">
+            <div class="ml-3">
+                <span class="text-white h6 d-block mb-1">Hesabım</span>
+                <a href="/profil" class="text-muted small" style="text-decoration: underline;">Profili Görüntüle</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <a href="/" class="sidebar-link">
+        <span class="sidebar-icon"><i class="fa-solid fa-house"></i></span> Anasayfa
+    </a>
+
+    <a href="{{ url_for('leaderboard') }}" class="sidebar-link">
+        <span class="sidebar-icon"><i class="fa-solid fa-trophy"></i></span> Leaderboard
+    </a>
+
+    <a href="/create_quiz" class="sidebar-link">
+        <span class="sidebar-icon"><i class="fa-solid fa-plus"></i></span> Quiz Oluştur
+    </a>
+
+    <a href="/onerilenler" class="sidebar-link">
+        <span class="sidebar-icon"><i class="fa-solid fa-fire"></i></span> Popüler
+    </a>
+
+    {% if session["is_admin"] %}
+    <a href="{{ url_for('admin_panel') }}" class="sidebar-link text-danger">
+        <span class="sidebar-icon"><i class="fa-solid fa-user-shield"></i></span> Yönetim Paneli
+    </a>
+    {% endif %}
+
+    <div class="mt-auto">
+        {% if session["logged_in"] %}
+            <a href="/logout" class="sidebar-link text-danger border-0">
+                <span class="sidebar-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Çıkış Yap
+            </a>
+        {% else %}
+            <a href="/login" class="btn btn-outline-light btn-block font-weight-bold py-2 mb-2">Giriş Yap</a>
+            <a href="/register" class="btn btn-light btn-block font-weight-bold py-2" style="color: black;">Kayıt Ol</a>
+        {% endif %}
+
+        <div class="mt-4 pt-3 border-top border-secondary text-center">
+             <button class="btn btn-link text-muted" onclick="toggleTheme()" style="text-decoration: none;">
+                <i class="fa-solid fa-moon mr-2" id="theme-icon-mobile"></i> Tema Değiştir
+             </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('mobileSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+
+    // İkon Senkronizasyonu
+    const originalToggle = window.toggleTheme;
+    function updateIcons() {
+        const theme = document.documentElement.getAttribute('data-theme');
+        const iconClass = theme === 'dark' ? 'fa-sun' : 'fa-moon';
+
+        const deskIcon = document.getElementById('theme-icon-desktop');
+        const mobIcon = document.getElementById('theme-icon-mobile');
+
+        if(deskIcon) deskIcon.className = `fa-solid ${iconClass}`;
+        if(mobIcon) mobIcon.className = `fa-solid ${iconClass} mr-2`;
+    }
+    document.addEventListener("DOMContentLoaded", updateIcons);
+</script>

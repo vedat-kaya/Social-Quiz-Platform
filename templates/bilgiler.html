@@ -1,0 +1,186 @@
+{% extends "layout.html" %}
+
+{% block title %}Bilgilerimi Güncelle | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- SETTINGS STUDIO STİLİ --- */
+    
+    .settings-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    .settings-header {
+        background: linear-gradient(135deg, var(--bg-color), var(--card-bg));
+        padding: 30px;
+        border-bottom: 1px solid var(--border-color);
+        text-align: center;
+    }
+    .settings-header h3 { font-weight: 800; color: var(--text-color); margin: 0; }
+    .settings-header p { color: var(--text-muted); margin-top: 5px; font-size: 0.95rem; }
+
+    .settings-body {
+        padding: 40px;
+    }
+
+    /* Input Grupları */
+    .input-group-text {
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        border-right: none;
+        color: var(--primary-color);
+        border-radius: 12px 0 0 12px;
+        width: 50px;
+        justify-content: center;
+    }
+    
+    .form-control-custom {
+        background-color: var(--bg-color) !important;
+        border: 1px solid var(--border-color) !important;
+        border-left: none !important;
+        color: var(--text-color) !important;
+        border-radius: 0 12px 12px 0;
+        padding: 12px 15px;
+        height: 50px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    /* Focus olunca tüm grup parlasın */
+    .input-group:focus-within .input-group-text {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+    .input-group:focus-within .form-control-custom {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.1);
+    }
+
+    /* Etiketler */
+    label {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        margin-left: 5px;
+    }
+
+    /* Güvenlik Kutusu */
+    .security-box {
+        background-color: rgba(23, 162, 184, 0.05);
+        border: 1px dashed #17a2b8;
+        border-radius: 12px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+    }
+    .security-icon {
+        font-size: 1.5rem;
+        color: #17a2b8;
+        margin-right: 15px;
+    }
+    .security-text {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        line-height: 1.4;
+    }
+
+    /* Kaydet Butonu */
+    .btn-save {
+        width: 100%;
+        background-color: #198754;
+        color: white;
+        font-weight: 800;
+        padding: 15px;
+        border-radius: 50px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(25, 135, 84, 0.3);
+        transition: transform 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .btn-save:hover {
+        background-color: #146c43;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(25, 135, 84, 0.4);
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-8 col-lg-6">
+        
+        <div class="settings-card">
+            
+            <div class="settings-header">
+                <div style="width: 70px; height: 70px; background: rgba(255, 123, 0, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto;">
+                    <i class="fa-solid fa-id-card fa-2x" style="color: var(--primary-color);"></i>
+                </div>
+                <h3>Hesap Bilgileri</h3>
+                <p>Kişisel bilgilerini buradan güncelleyebilirsin.</p>
+            </div>
+
+            <div class="settings-body">
+                <form method="post">
+                    
+                    <div class="form-group mb-4">
+                        <label>İsim Soyisim</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                            </div>
+                            <input type="text" name="name" class="form-control form-control-custom" value="{{ user.name }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label>Kullanıcı Adı</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa-solid fa-at"></i></span>
+                            </div>
+                            <input type="text" name="username" class="form-control form-control-custom" value="{{ user.username }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label>E-Posta Adresi</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                            </div>
+                            <input type="email" name="email" class="form-control form-control-custom" value="{{ user.email }}" required>
+                        </div>
+                    </div>
+
+                    <div class="security-box mb-4">
+                        <div class="security-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div class="security-text">
+                            <strong>Şifre Değişikliği:</strong><br>
+                            Güvenliğiniz için şifre işlemleri sadece giriş ekranındaki "Şifremi Unuttum" bölümünden yapılmaktadır.
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-save">
+                        <i class="fa-solid fa-floppy-disk mr-2"></i> Değişiklikleri Kaydet
+                    </button>
+
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

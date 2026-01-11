@@ -1,0 +1,264 @@
+{% extends "layout.html" %}
+
+{% block title %}Giriş Yap | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- PREMIUM LOGIN STİLİ --- */
+    
+    .login-wrapper {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .login-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 25px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        overflow: hidden;
+        width: 100%;
+        max-width: 900px;
+        display: flex;
+        flex-wrap: wrap; /* Mobilde alt alta düşmesi için şart */
+    }
+
+    /* SOL TARAF (GÖRSEL / HOŞ GELDİN) */
+    .welcome-side {
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        padding: 50px;
+        flex: 1;
+        min-width: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Dekoratif Daireler */
+    .welcome-side::before {
+        content: ''; position: absolute; top: -50px; right: -50px;
+        width: 150px; height: 150px; border-radius: 50%;
+        background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+        opacity: 0.15;
+    }
+    .welcome-side::after {
+        content: ''; position: absolute; bottom: -50px; left: -50px;
+        width: 180px; height: 180px; border-radius: 50%;
+        background: radial-gradient(circle, #E50914 0%, transparent 70%);
+        opacity: 0.1;
+    }
+
+    .welcome-title {
+        font-size: 2.2rem; font-weight: 900; color: #fff; margin-bottom: 15px;
+        letter-spacing: -1px;
+    }
+    .welcome-text {
+        color: rgba(255,255,255,0.7); font-size: 1.05rem; line-height: 1.6;
+        max-width: 300px;
+    }
+
+    .welcome-icon {
+        font-size: 4rem; color: var(--primary-color);
+        margin-bottom: 25px;
+        filter: drop-shadow(0 0 20px rgba(255, 123, 0, 0.4));
+        animation: floatIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes floatIcon {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    /* SAĞ TARAF (FORM) */
+    .form-side {
+        flex: 1.2;
+        padding: 50px; /* Masaüstünde geniş boşluk */
+        background-color: var(--card-bg);
+        min-width: 350px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .form-header h3 { font-weight: 800; color: var(--text-color); margin-bottom: 5px; }
+    .form-header p { color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; }
+
+    /* Input Grubu */
+    .input-group-custom { position: relative; margin-bottom: 20px; }
+    
+    .input-icon {
+        position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+        color: var(--text-muted); z-index: 10; transition: color 0.3s;
+    }
+    
+    .form-control-premium {
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        border-radius: 12px;
+        padding: 15px 15px 15px 45px;
+        width: 100%; transition: all 0.3s; height: 50px;
+    }
+    .form-control-premium:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(255, 123, 0, 0.1);
+        outline: none;
+    }
+    .form-control-premium:focus + .input-icon { color: var(--primary-color); }
+
+    /* Butonlar */
+    .btn-login {
+        background: linear-gradient(90deg, var(--primary-color), #ff9f43);
+        border: none; color: white; font-weight: 800;
+        padding: 15px; border-radius: 50px; width: 100%;
+        text-transform: uppercase; letter-spacing: 1px;
+        box-shadow: 0 10px 20px rgba(255, 123, 0, 0.3);
+        transition: all 0.3s; cursor: pointer;
+    }
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(255, 123, 0, 0.4);
+    }
+
+    .btn-google-premium {
+        background-color: #fff; color: #333;
+        border: 1px solid #ddd; border-radius: 50px;
+        padding: 12px; width: 100%; font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.2s; text-decoration: none; margin-top: 15px;
+    }
+    .btn-google-premium:hover {
+        background-color: #f8f9fa; transform: translateY(-2px);
+        text-decoration: none; color: #000;
+    }
+    .btn-google-premium img { width: 24px; margin-right: 10px; }
+
+    /* Linkler */
+    .forgot-pass {
+        display: block; text-align: right; font-size: 0.85rem;
+        color: var(--text-muted); margin-top: -10px; margin-bottom: 20px;
+        text-decoration: none; transition: color 0.2s;
+    }
+    .forgot-pass:hover { color: var(--primary-color); text-decoration: none; }
+
+    .register-redirect { text-align: center; margin-top: 25px; color: var(--text-muted); font-size: 0.9rem; }
+    .register-redirect a { color: var(--primary-color); font-weight: 700; text-decoration: none; }
+    .register-redirect a:hover { text-decoration: underline; }
+
+    .form-error { color: #dc3545; font-size: 0.85rem; margin-top: 5px; margin-left: 5px; display: block; }
+
+    /* --- MOBİL İÇİN KRİTİK DÜZELTMELER --- */
+    @media (max-width: 768px) {
+        .login-wrapper {
+            padding: 10px; /* Dış boşluğu azalt */
+            align-items: flex-start; /* Mobilde yukarı yaslansın */
+            padding-top: 30px;
+        }
+
+        .login-card { 
+            flex-direction: column; /* Alt alta sırala */
+        }
+        
+        /* Sol Taraf (Welcome) Mobildeki Hali */
+        .welcome-side { 
+            padding: 30px 20px; /* Boşlukları daralt */
+            min-height: 200px; /* Çok yer kaplamasın */
+        }
+        .welcome-title { font-size: 1.8rem; }
+        .welcome-icon { font-size: 3rem; margin-bottom: 15px; }
+
+        /* Sağ Taraf (Form) Mobildeki Hali */
+        .form-side {
+            padding: 30px 20px !important; /* MOBİLDE BOŞLUĞU 20PX'E DÜŞÜRDÜK! */
+            min-width: auto; /* Min-width'i iptal ettik ki ekrana sığsın */
+            width: 100%; /* Ekranı tam kapla */
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="login-wrapper">
+    <div class="login-card">
+        
+        <div class="welcome-side">
+            <i class="fa-solid fa-door-open welcome-icon"></i>
+            <h1 class="welcome-title">Tekrar Hoş Geldin!</h1>
+            <p class="welcome-text">
+                Kaldığın yerden devam etmek için giriş yap. Yeni maceralar seni bekliyor.
+            </p>
+        </div>
+
+        <div class="form-side">
+            <div class="form-header">
+                <h3>Giriş Yap</h3>
+                <p>Hesap bilgilerinle oturum aç.</p>
+            </div>
+
+            <form method="post">
+                
+                <div class="input-group-custom">
+                    <i class="fa-solid fa-user input-icon"></i>
+                    {{ form.username(class="form-control-premium", placeholder="Kullanıcı Adı veya E-Posta") }}
+                    {% if form.username.errors %}
+                        <span class="form-error">{{ form.username.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="input-group-custom">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    {{ form.password(class="form-control-premium", placeholder="Parola") }}
+                    {% if form.password.errors %}
+                        <span class="form-error">{{ form.password.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <a href="/sifremi-unuttum" class="forgot-pass">Şifremi Unuttum?</a>
+
+                <button type="submit" id="loginBtn" class="btn-login" onclick="loadingEffect()">
+                    GİRİŞ YAP
+                </button>
+
+            </form>
+
+            <div class="text-center my-3">
+                <span style="color: var(--border-color); font-size: 0.9rem;">veya</span>
+            </div>
+
+            <a href="/login/google" class="btn-google-premium">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google Logo">
+                Google ile Devam Et
+            </a>
+
+            <div class="register-redirect">
+                Henüz hesabın yok mu? <a href="{{ url_for('register') }}">Hemen Kayıt Ol</a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+function loadingEffect() {
+    var form = document.querySelector("form");
+    if (form) {
+        var btn = document.getElementById("loginBtn");
+        setTimeout(function(){
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> GİRİŞ YAPILIYOR...';
+            btn.style.opacity = "0.8";
+            btn.style.pointerEvents = "none";
+        }, 100);
+    }
+}
+</script>
+
+{% endblock %}
