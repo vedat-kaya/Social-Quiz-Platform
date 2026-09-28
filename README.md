@@ -1,23 +1,47 @@
-# SorSana
+<p align="center">
+  <img src="static/img/slogo.png" width="88" alt="SorSana">
+</p>
 
-Topluluk tabanlı quiz ve görsel oyun platformu. Kullanıcılar klasik test, fotoğraf turnuvası, kör sıralama ve tier list oluşturur, oynar ve paylaşır.
+<h1 align="center">SorSana</h1>
 
-**Canlı site:** [sorsana.pythonanywhere.com](https://sorsana.pythonanywhere.com)
+<p align="center">
+  <strong>Bilgini yarıştır.</strong><br>
+  Topluluk quizleri, fotoğraf turnuvası, kör sıralama ve tier list.
+</p>
 
-## Özellikler
+<p align="center">
+  <a href="https://sorsana.pythonanywhere.com"><strong>Canlı site</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/vedat-kaya/Social-Quiz-Platform">Kaynak</a>
+</p>
 
-- Klasik test (sonuç kartı) ve fotoğraf havuzu
-- Aynı havuzdan üç oyun: VS turnuva, kör sıralama (1–10), düzenlenebilir tier list
-- Kayıt, e-posta doğrulama, Google ile giriş, şifre sıfırlama
-- Taslak / yayın ayrımı — yayınlanmamış içerik yalnızca sahibine açık
-- Beğeni, kaydetme, liderlik tablosu, yönetici paneli
-- Mobil ve masaüstü uyumlu koyu arayüz
+<p align="center">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3-3776AB?style=flat-square&logo=python&logoColor=white">
+  <img alt="Flask" src="https://img.shields.io/badge/Flask-3-000000?style=flat-square&logo=flask&logoColor=white">
+  <img alt="MySQL" src="https://img.shields.io/badge/MySQL-8-4479A1?style=flat-square&logo=mysql&logoColor=white">
+  <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=flat-square&logo=javascript&logoColor=black">
+</p>
 
-## Teknolojiler
+---
 
-Python 3 · Flask · MySQL · Jinja2 · JavaScript · Bootstrap 4 · Pillow · Flask-Mail · Authlib (Google OAuth)
+Tek fotoğraf havuzundan üç oyun. Taslak yayınlanmadan vitrine düşmez. Kayıt, doğrulama ve spam önlemleri üretim ortamında çalışır.
 
-Dağıtım: [PythonAnywhere](https://www.pythonanywhere.com)
+## Oyunlar
+
+| Mod | Ne yapar |
+| --- | --- |
+| Klasik test | Soru, şık, sonuç kartı |
+| Turnuva | İki görsel, bir kazanan |
+| Kör sıralama | Ortada fotoğraf, solda 1–10 |
+| Tier list | Sürükle-bırak katmanlar |
+
+Beğeni, kaydetme, zirve tablosu ve yönetici paneli dahildir.
+
+## Yığın
+
+`Flask` · `MySQL` · `Jinja2` · `JavaScript` · `Bootstrap 4` · `Pillow` · `Flask-Mail` · `Authlib`
+
+Sunucu: [PythonAnywhere](https://www.pythonanywhere.com)
 
 ## Kurulum
 
@@ -25,11 +49,10 @@ Dağıtım: [PythonAnywhere](https://www.pythonanywhere.com)
 git clone https://github.com/vedat-kaya/Social-Quiz-Platform.git
 cd Social-Quiz-Platform
 python -m venv venv
-# Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Proje köküne `.env` dosyası oluştur (GitHub’a yüklenmez):
+Kök dizine `.env` koy (repoya girmez):
 
 ```env
 SECRET_KEY=
@@ -44,19 +67,16 @@ GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 ```
 
-Veritabanı şemasını `veritabani.sql` ile oluştur, ardından:
+Şema: `veritabani.sql`
 
 ```bash
 python quiz.py
 ```
 
-## Güvenlik notları
+## Güvenlik
 
-- `.env` `.gitignore` içindedir; sırlar repoya girmez.
-- Kayıtta CSRF, honeypot, IP limiti ve Gmail adres normalizasyonu vardır.
-- Doğrulanmayan hesaplar 24 saat sonra temizlenir.
-- Şifre sıfırlama bağlantısı 1 saat geçerlidir.
+CSRF, honeypot, IP limiti, Gmail normalizasyonu, 24 saat doğrulanmayan hesap temizliği, 1 saatlik şifre sıfırlama token’ı. `.env` `.gitignore`’dadır.
 
 ## Lisans
 
-Özel proje — kaynak [GitHub](https://github.com/vedat-kaya/Social-Quiz-Platform) üzerinde. Tüm hakları saklıdır.
+Özel proje. Tüm hakları saklıdır.
