@@ -1,0 +1,275 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ quiz.title }} | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- PREMIUM QUIZ MODE (FOTOĞRAF DESTEKLİ) --- */
+    
+    :root {
+        --quiz-gold: #FFD700;       
+        --quiz-gold-dim: #b89b00;   
+        --quiz-bg: #141414;         
+        --quiz-card: #1f1f1f;       
+        --text-white: #ffffff;
+        --text-gray: #b3b3b3;
+    }
+
+    body { background-color: var(--quiz-bg) !important; }
+
+    .quiz-solve-container {
+        max-width: 850px; 
+        margin: 0 auto;
+        padding-bottom: 80px;
+    }
+
+    /* HEADER */
+    .quiz-solve-header {
+        background-color: var(--quiz-card);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        margin-bottom: 40px;
+        margin-top: 2rem;
+        border: 1px solid rgba(255,255,255,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    .quiz-solve-header::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+        background: linear-gradient(90deg, transparent, var(--quiz-gold), transparent);
+    }
+    
+    .quiz-title-main { font-weight: 800; color: var(--text-white); font-size: 2rem; margin-bottom: 15px; letter-spacing: -0.5px; }
+    .quiz-desc-main { font-size: 1.1rem; color: var(--text-gray); line-height: 1.6; max-width: 600px; margin: 0 auto; }
+
+    /* SORU KARTI */
+    .question-card {
+        background-color: var(--quiz-card);
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        padding: 35px;
+        margin-bottom: 30px;
+        transition: transform 0.3s;
+        position: relative;
+    }
+    
+    /* --- YENİ EKLENEN: SORU GÖRSELİ ALANI --- */
+    .question-img-wrapper {
+        width: 100%;
+        margin-bottom: 25px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.1);
+        background-color: #000;
+        display: flex; justify-content: center;
+    }
+    .question-img-display {
+        max-width: 100%;
+        max-height: 450px; /* Çok uzun resimleri sınırlar */
+        height: auto;
+        object-fit: contain;
+    }
+
+    /* Soru Metni */
+    .question-text {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-white);
+        margin-bottom: 30px;
+        display: flex;
+        align-items: flex-start;
+        line-height: 1.5;
+    }
+    
+    .question-number {
+        background: var(--quiz-gold);
+        color: #000;
+        width: 32px; height: 32px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        font-size: 1rem; font-weight: 800;
+        margin-right: 18px;
+        flex-shrink: 0; 
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    }
+
+    /* ŞIKLAR */
+    .hidden-radio { display: none; }
+    .option-label { display: block; cursor: pointer; margin-bottom: 15px; position: relative; }
+
+    .option-card {
+        display: flex; align-items: center;
+        padding: 15px 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 15px;
+        background-color: #2b2b2b; 
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        color: var(--text-gray);
+        font-weight: 600; font-size: 1.05rem;
+    }
+
+    /* --- YENİ EKLENEN: ŞIK GÖRSELİ (KÜÇÜK) --- */
+    .option-img-small {
+        width: 60px; height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 15px;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .option-letter {
+        width: 32px; height: 32px;
+        border: 2px solid #555;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin-right: 20px;
+        font-size: 0.9rem; font-weight: 700;
+        color: #888;
+        transition: all 0.3s;
+        flex-shrink: 0;
+    }
+
+    .option-label:hover .option-card { background-color: #383838; border-color: #666; transform: translateX(5px); }
+    .option-label:hover .option-letter { border-color: #888; color: #fff; }
+
+    .hidden-radio:checked + .option-card {
+        background-color: rgba(255, 215, 0, 0.1);
+        border-color: var(--quiz-gold);        
+        color: var(--text-white);            
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+    }
+    .hidden-radio:checked + .option-card .option-letter {
+        background-color: var(--quiz-gold);
+        border-color: var(--quiz-gold);
+        color: #000;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    /* BUTON */
+    .btn-finish-quiz {
+        background: linear-gradient(135deg, #FFD700 0%, #FFB900 100%);
+        color: #000;
+        font-weight: 900;
+        font-size: 1.2rem;
+        padding: 20px;
+        border-radius: 50px;
+        width: 100%;
+        border: none;
+        box-shadow: 0 10px 30px rgba(255, 185, 0, 0.3);
+        transition: transform 0.3s, box-shadow 0.3s;
+        margin-top: 30px;
+        letter-spacing: 1px;
+    }
+    .btn-finish-quiz:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(255, 185, 0, 0.5);
+        color: #000;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="quiz-solve-container">
+    
+    <div class="quiz-solve-header">
+        <h1 class="quiz-title-main aralikli-baslik">{{ quiz.title }}</h1>
+        <p class="quiz-desc-main">{{ quiz.description }}</p>
+        
+        <div class="mt-4 d-flex justify-content-center">
+            <span class="badge badge-dark p-2 mr-3 border border-secondary" style="font-size: 0.9rem;">
+                <i class="fa-solid fa-eye mr-1"></i> {{ quiz.views }}
+            </span>
+            <span class="badge badge-dark p-2 border border-secondary" style="font-size: 0.9rem;">
+                <i class="fa-solid fa-heart mr-1 text-danger"></i> {{ quiz.likes }}
+            </span>
+        </div>
+    </div>
+
+    <form method="post">
+        
+        {% for question in questions %}
+        <div class="question-card">
+            
+            {% if question.question_image_url %}
+            <div class="question-img-wrapper">
+                <img src="{{ url_for('static', filename='uploads/quiz_images/' + question.question_image_url) }}" class="question-img-display" alt="Soru Görseli">
+            </div>
+            {% endif %}
+            
+            <div class="question-text">
+                <span class="question-number">{{ loop.index }}</span>
+                {{ question.question_text }}
+            </div>
+            
+            <div class="options-area">
+                
+                <label class="option-label">
+                    <input type="radio" name="cevap_{{ question.question_id }}" value="a" class="hidden-radio" required>
+                    <div class="option-card">
+                        <span class="option-letter">A</span>
+                        
+                        {% if question.option_a_image_url %}
+                            <img src="{{ url_for('static', filename='uploads/quiz_images/' + question.option_a_image_url) }}" class="option-img-small">
+                        {% endif %}
+                        
+                        {{ question.option_a }}
+                    </div>
+                </label>
+
+                <label class="option-label">
+                    <input type="radio" name="cevap_{{ question.question_id }}" value="b" class="hidden-radio" required>
+                    <div class="option-card">
+                        <span class="option-letter">B</span>
+                        
+                        {% if question.option_b_image_url %}
+                            <img src="{{ url_for('static', filename='uploads/quiz_images/' + question.option_b_image_url) }}" class="option-img-small">
+                        {% endif %}
+
+                        {{ question.option_b }}
+                    </div>
+                </label>
+
+                <label class="option-label">
+                    <input type="radio" name="cevap_{{ question.question_id }}" value="c" class="hidden-radio" required>
+                    <div class="option-card">
+                        <span class="option-letter">C</span>
+                        
+                        {% if question.option_c_image_url %}
+                            <img src="{{ url_for('static', filename='uploads/quiz_images/' + question.option_c_image_url) }}" class="option-img-small">
+                        {% endif %}
+
+                        {{ question.option_c }}
+                    </div>
+                </label>
+
+                <label class="option-label">
+                    <input type="radio" name="cevap_{{ question.question_id }}" value="d" class="hidden-radio" required>
+                    <div class="option-card">
+                        <span class="option-letter">D</span>
+                        
+                        {% if question.option_d_image_url %}
+                            <img src="{{ url_for('static', filename='uploads/quiz_images/' + question.option_d_image_url) }}" class="option-img-small">
+                        {% endif %}
+
+                        {{ question.option_d }}
+                    </div>
+                </label>
+
+            </div>
+        </div>
+        {% endfor %} 
+        
+        <button type="submit" class="btn btn-finish-quiz">
+            <i class="fa-solid fa-flag-checkered mr-2"></i> TESTİ BİTİR VE SONUCU GÖR
+        </button>
+
+    </form>
+
+</div> 
+
+{% endblock body %}

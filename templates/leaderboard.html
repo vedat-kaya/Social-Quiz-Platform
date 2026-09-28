@@ -1,0 +1,274 @@
+{% extends "layout.html" %}
+
+{% block title %}Zirvedekiler | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    /* --- LEADERBOARD PREMIUM STİLİ --- */
+    
+    .leaderboard-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    .leaderboard-title {
+        font-size: 3.5rem;
+        font-weight: 900;
+        letter-spacing: -2px;
+        background: linear-gradient(to right, #f8b500, #fceabb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 10px 30px rgba(248, 181, 0, 0.2);
+    }
+
+    /* --- PODYUM (İLK 3) --- */
+    .podium-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end; /* Masaüstünde alt hizalama */
+        gap: 20px;
+        margin-bottom: 60px;
+        flex-wrap: wrap;
+    }
+
+    .podium-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        width: 220px;
+        position: relative;
+        transition: transform 0.3s;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .podium-card:hover { transform: translateY(-10px); }
+
+    .podium-avatar {
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border: 4px solid var(--border-color);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .rank-badge {
+        position: absolute;
+        top: -15px; left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--bg-color);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: 800;
+        font-size: 0.9rem;
+        border: 1px solid var(--border-color);
+        white-space: nowrap;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    }
+
+    /* 1. SIRA (ALTIN) - ORTADA VE BÜYÜK */
+    .rank-1 {
+        order: 2; /* Ortaya al */
+        height: 340px; /* Daha yüksek */
+        width: 260px;
+        border-color: #ffd700;
+        box-shadow: 0 0 50px rgba(255, 215, 0, 0.15);
+        z-index: 2;
+        background: linear-gradient(to bottom, var(--card-bg), rgba(255, 215, 0, 0.05));
+    }
+    .rank-1 .podium-avatar { width: 120px; height: 120px; border-color: #ffd700; }
+    .rank-1 .rank-badge { background-color: #ffd700; color: #000; border: none; font-size: 1.1rem; padding: 7px 20px; }
+    .rank-1 .username { font-size: 1.5rem; color: #ffd700; }
+
+    /* 2. SIRA (GÜMÜŞ) - SOLDA */
+    .rank-2 {
+        order: 1;
+        height: 280px;
+        border-color: #c0c0c0;
+        /* Masaüstünde 1.nin yanında dursun */
+    }
+    .rank-2 .podium-avatar { border-color: #c0c0c0; }
+    .rank-2 .rank-badge { background-color: #c0c0c0; color: #000; border: none; }
+    .rank-2 .username { color: #c0c0c0; }
+
+    /* 3. SIRA (BRONZ) - SAĞDA */
+    .rank-3 {
+        order: 3;
+        height: 260px;
+        border-color: #cd7f32;
+    }
+    .rank-3 .podium-avatar { border-color: #cd7f32; }
+    .rank-3 .rank-badge { background-color: #cd7f32; color: #000; border: none; }
+    .rank-3 .username { color: #cd7f32; }
+
+    .stat-box {
+        background-color: rgba(0,0,0,0.3);
+        border-radius: 12px;
+        padding: 10px;
+        margin-top: 15px;
+    }
+
+    /* --- LİSTE (4-20) --- */
+    .list-item {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        padding: 15px 25px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s;
+    }
+    .list-item:hover {
+        transform: scale(1.01);
+        border-color: var(--primary-color);
+        background-color: var(--bg-color);
+    }
+
+    .rank-number {
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: var(--text-muted);
+        width: 40px;
+        text-align: center;
+        margin-right: 20px;
+    }
+
+    .list-avatar {
+        width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 20px;
+        border: 2px solid var(--border-color);
+    }
+
+    .username { font-weight: 800; color: var(--text-color); margin-bottom: 2px; }
+    .fullname { color: var(--text-muted); font-size: 0.85rem; }
+
+    /* --- MOBİL İÇİN ÖZEL DÜZENLEMELER --- */
+    @media (max-width: 768px) {
+        .leaderboard-title { font-size: 2.5rem; }
+        
+        /* Podyum düzenini değiştir: Grid mantığı */
+        .podium-container {
+            align-items: flex-start; /* Üstten hizala */
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        /* 1. Sıra: En üstte ve geniş */
+        .rank-1 {
+            order: 1; /* İlk sırada */
+            width: 100%; /* Tam genişlik */
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .rank-1 .podium-avatar { width: 90px; height: 90px; }
+
+        /* 2. ve 3. Sıra: 1.nin altında yan yana */
+        .rank-2, .rank-3 {
+            width: 48%; /* Yarı yarıya paylaşsınlar */
+            height: auto; /* İçeriğe göre uzasın */
+            padding: 15px 5px; /* İç boşluğu azalt */
+        }
+        .rank-2 { order: 2; }
+        .rank-3 { order: 3; }
+        
+        .rank-2 .podium-avatar, .rank-3 .podium-avatar {
+            width: 60px; height: 60px; /* Mobilde avatar küçülsün */
+        }
+
+        /* Liste elemanlarını sıkılaştır */
+        .list-item { padding: 10px 15px; }
+        .rank-number { font-size: 1rem; width: 30px; margin-right: 10px; }
+        .list-avatar { width: 40px; height: 40px; margin-right: 15px; }
+        .fullname { display: none; } /* Mobilde isim soyisim gizle, sadece kullanıcı adı kalsın */
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4 mb-5">
+    
+    <div class="leaderboard-header">
+        <h1 class="leaderboard-title">ZİRVEDEKİLER</h1>
+        <p class="lead opacity-75" style="color: var(--text-muted);">En çok izlenen içerik üreticileri.</p>
+    </div>
+
+    <div class="podium-container">
+        
+        {% for user in users %}
+            {% if loop.index <= 3 %}
+                
+                <div class="podium-card rank-{{ loop.index }}">
+                    <div class="rank-badge shadow">
+                        {% if loop.index == 1 %}<i class="fa-solid fa-crown mr-1"></i> 1.{% endif %}
+                        {% if loop.index == 2 %}<i class="fa-solid fa-medal mr-1"></i> 2.{% endif %}
+                        {% if loop.index == 3 %}<i class="fa-solid fa-medal mr-1"></i> 3.{% endif %}
+                    </div>
+
+                    <a href="{{ url_for('user_profile', username=user.username) }}" class="text-decoration-none">
+                        <img src="{{ url_for('static', filename='uploads/profile_pics/' + user.profile_pic_url) }}" class="podium-avatar">
+                        <h5 class="username text-truncate px-2">{{ user.username }}</h5>
+                    </a>
+
+                    <div class="stat-box">
+                        <div class="font-weight-bold" style="color: var(--text-color);">
+                            <i class="fa-solid fa-eye text-primary"></i> {{ user.total_views }}
+                        </div>
+                        <small class="text-muted"><i class="fa-solid fa-heart text-danger"></i> {{ user.total_likes }}</small>
+                    </div>
+                </div>
+
+            {% endif %}
+        {% endfor %}
+        
+        {% if users|length == 0 %}
+            <div class="text-muted text-center w-100">Henüz sıralama verisi yok. İlk sen olabilirsin!</div>
+        {% endif %}
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            
+            {% if users|length > 3 %}
+                <h5 class="mb-3 ml-2 text-uppercase font-weight-bold" style="color: var(--text-muted); font-size: 0.9rem; letter-spacing: 1px;">
+                    Diğer Yıldızlar
+                </h5>
+            {% endif %}
+
+            {% for user in users %}
+                {% if loop.index > 3 %}
+                <a href="{{ url_for('user_profile', username=user.username) }}" class="text-decoration-none">
+                    <div class="list-item">
+                        <div class="rank-number">#{{ loop.index }}</div>
+                        
+                        <img src="{{ url_for('static', filename='uploads/profile_pics/' + user.profile_pic_url) }}" class="list-avatar">
+                        
+                        <div style="flex-grow: 1; overflow: hidden;">
+                            <div class="username text-truncate">{{ user.username }}</div>
+                            <div class="fullname text-truncate">{{ user.name }}</div>
+                        </div>
+
+                        <div class="text-right ml-2">
+                            <div class="font-weight-bold" style="color: var(--primary-color); font-size: 1.1rem;">
+                                {{ user.total_views }} 
+                                <small class="text-muted d-none d-sm-inline" style="font-size: 0.7rem;">GÖRÜNTÜLENME</small>
+                                <small class="text-muted d-inline d-sm-none"><i class="fa-solid fa-eye"></i></small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="text-center mt-5 text-muted small">
+        <i class="fa-solid fa-circle-info"></i> Sıralama toplam görüntülenme sayısına göre otomatik güncellenir.
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}Kayıt | SorSana{% endblock %}
+{% block body_class %}auth-bleed{% endblock %}
+
+{% block body %}
+<div class="auth">
+    <div class="auth-visual">
+        <p class="qz-kicker">Davet</p>
+        <h1>Kendi vitrinini kur.</h1>
+        <ul>
+            <li>Fotoğraf havuzu: turnuva + kör + tier</li>
+            <li>Klasik testlerle sonuç kartı</li>
+            <li>Zirve tablosunda görünür ol</li>
+        </ul>
+    </div>
+    <div class="auth-panel">
+        <h2>Aramıza katıl</h2>
+        <form method="post" autocomplete="off">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="hp-wrap" aria-hidden="true">
+                <label for="website">Website</label>
+                {{ form.website(id="website", tabindex="-1", autocomplete="off") }}
+            </div>
+            {{ form.name(class="studio-input", placeholder="İsim") }}
+            {% if form.name.errors %}<span class="field-error">{{ form.name.errors[0] }}</span>{% endif %}
+            {{ form.username(class="studio-input", placeholder="Kullanıcı adı") }}
+            {% if form.username.errors %}<span class="field-error">{{ form.username.errors[0] }}</span>{% endif %}
+            {{ form.email(class="studio-input", placeholder="E-posta") }}
+            {% if form.email.errors %}<span class="field-error">{{ form.email.errors[0] }}</span>{% endif %}
+            {{ form.password(class="studio-input", placeholder="Parola") }}
+            {% if form.password.errors %}<span class="field-error">{{ form.password.errors[0] }}</span>{% endif %}
+            {{ form.confirm(class="studio-input", placeholder="Parola tekrar") }}
+            {% if form.confirm.errors %}<span class="field-error">{{ form.confirm.errors[0] }}</span>{% endif %}
+            <button type="submit" class="studio-go">Hesap aç</button>
+        </form>
+        <a class="auth-google" href="{{ url_for('google_login') }}">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt=""> Google ile devam
+        </a>
+        <p class="auth-switch">Zaten üye misin? <a href="{{ url_for('login') }}">Giriş yap</a></p>
+    </div>
+</div>
+{% endblock %}

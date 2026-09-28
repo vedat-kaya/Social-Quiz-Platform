@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% from "includes/_formhelpers.html" import render_field %}
+{% block title %}Düzenle · {{ quiz.title }} | SorSana{% endblock %}
+
+{% block body %}
+<div class="studio">
+    <header class="studio-top">
+        <p class="qz-kicker" style="color: var(--primary-color);">Düzenle</p>
+        <h1>{{ quiz.title }}</h1>
+        <p class="studio-lead">Başlık, açıklama ve kapağı güncelle. Format değişmez.</p>
+    </header>
+    <form method="post" enctype="multipart/form-data" class="studio-grid">
+        <section class="studio-main">
+            <label class="studio-label">Başlık</label>
+            {{ render_field(form.title, class="studio-input") }}
+            <label class="studio-label">Açıklama</label>
+            {{ render_field(form.description, class="studio-input studio-area", rows="7") }}
+        </section>
+        <aside class="studio-side">
+            <label class="studio-label">Kapak</label>
+            <div class="cover-drop has-file" style="background-image:url('{{ url_for('static', filename='uploads/quiz_covers/' + quiz.cover_image_url) }}')">
+                <span>Yeni görsel seç</span>
+                <input type="file" name="cover_image" accept="image/*">
+            </div>
+            <label class="studio-label">Kategori</label>
+            {{ form.category(class="studio-input") }}
+            <div hidden>{{ form.quiz_type }}</div>
+            <div class="studio-actions">
+                <a href="{{ url_for('paylastiklarim') }}" class="studio-ghost">İptal</a>
+                <button type="submit" class="studio-go">Kaydet</button>
+            </div>
+        </aside>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelector('.cover-drop input')?.addEventListener('change', function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var box = e.target.closest('.cover-drop');
+    box.style.backgroundImage = 'url(' + URL.createObjectURL(file) + ')';
+    box.classList.add('has-file');
+});
+</script>
+{% endblock %}

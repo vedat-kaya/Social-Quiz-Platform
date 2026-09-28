@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Giriş | SorSana{% endblock %}
+{% block body_class %}auth-bleed{% endblock %}
+
+{% block body %}
+<div class="auth">
+    <div class="auth-visual">
+        <p class="qz-kicker">SorSana</p>
+        <h1>Sahneye dön.</h1>
+        <p>Turnuva, kör sıralama, tier list. Tercihin burada kalır.</p>
+    </div>
+    <div class="auth-panel">
+        <h2>Giriş yap</h2>
+        <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {{ form.username(class="studio-input", placeholder="Kullanıcı adı veya e-posta") }}
+            {{ form.password(class="studio-input", placeholder="Parola") }}
+            <button type="submit" class="studio-go">Devam</button>
+        </form>
+        <a class="auth-forgot" href="{{ url_for('forgot_password') }}">Şifremi unuttum</a>
+        <a class="auth-google" href="{{ url_for('google_login') }}">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt=""> Google ile devam
+        </a>
+        <p class="auth-switch">Hesabın yok mu? <a href="{{ url_for('register') }}">Kayıt ol</a></p>
+    </div>
+</div>
+{% endblock %}

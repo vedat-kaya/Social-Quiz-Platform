@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SorSana ile bilgini yarıştır, turnuvalara katıl, kör sıralama yap. Eğlencenin yeni adresi.">
+    <meta name="theme-color" content="#0b0b0d">
+    <title>{% block title %}SorSana{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/slogo.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        document.documentElement.setAttribute('data-theme', 'dark');
+    </script>
+    {% block head %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100 {% block body_class %}{% endblock %}">
+    {% include "includes/navbar.html" %}
+    <div class="toast-dock">{% include "includes/messages.html" %}</div>
+    <main class="container-fluid flex-grow-1">
+        {% block body %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <strong>SorSana</strong>
+                <span>© 2026 Tüm hakları saklıdır</span>
+            </div>
+            <nav class="footer-nav">
+                <a href="{{ url_for('about') }}">Hakkımızda</a>
+                <a class="footer-ico" href="https://www.instagram.com/vedatkayadev/" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            </nav>
+        </div>
+    </footer>
+    <div id="shortcut-sheet" class="shortcut-sheet" hidden>
+        <div class="shortcut-card">
+            <h4>Kısayollar</h4>
+            <ul>
+                <li><kbd>/</kbd> Aramaya odaklan</li>
+                <li><kbd>?</kbd> Bu paneli aç / kapat</li>
+                <li><kbd>Esc</kbd> Oyundan lobiye dön</li>
+            </ul>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

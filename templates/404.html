@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block title %}Sayfa yok · SorSana{% endblock %}
+{% block body %}
+<section class="err-page">
+    <p class="qz-kicker" style="color: var(--primary-color);">Hata 404</p>
+    <h1>Kayıp sinyal</h1>
+    <p>Bu adres artık yok ya da hiç yoktu. Ana vitrine dön, orada her şey yerinde.</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg" style="border-radius:999px;font-weight:800;padding:14px 32px;">Ana sayfa</a>
+</section>
+{% endblock %}

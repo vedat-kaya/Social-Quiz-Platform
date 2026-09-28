@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}Sunucu hatası · SorSana{% endblock %}
+{% block body %}
+<section class="err-page">
+    <p class="qz-kicker" style="color:#ff4d6d;">Hata 500</p>
+    <h1>Kısa devre</h1>
+    <p>Bir şey takıldı. Sayfayı yenile ya da biraz sonra tekrar dene. Verilerin güvende.</p>
+    <div>
+        <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg mr-2" style="border-radius:999px;font-weight:800;padding:14px 32px;">Ana sayfa</a>
+        <button type="button" class="btn btn-outline-light btn-lg" style="border-radius:999px;font-weight:700;" onclick="location.reload()">Yenile</button>
+    </div>
+</section>
+{% endblock %}

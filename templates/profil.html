@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block title %}Profilim | SorSana{% endblock %}
+
+{% block body %}
+<div class="container mt-4 mb-5">
+    <div class="profile-hero mb-4">
+        <div class="d-flex flex-wrap align-items-center" style="gap: 28px;">
+            <div class="profile-img-wrapper mb-0">
+                {% if user_data.profile_pic_url and 'http' in user_data.profile_pic_url %}
+                    <img src="{{ user_data.profile_pic_url }}" class="profile-img" alt="">
+                {% elif user_data.profile_pic_url and user_data.profile_pic_url != 'default.png' %}
+                    <img src="{{ url_for('static', filename='uploads/profile_pics/' + user_data.profile_pic_url) }}" class="profile-img" alt="">
+                {% else %}
+                    <img src="{{ url_for('static', filename='uploads/profile_pics/default.png') }}" class="profile-img" alt="">
+                {% endif %}
+                <button type="button" class="camera-btn" onclick="document.getElementById('foto-input').click()" title="Fotoğrafı değiştir">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+            </div>
+            <div>
+                <p class="qz-kicker" style="color: var(--primary-color);">Profil</p>
+                <h1 class="user-name mb-1">{{ user_data.name }}</h1>
+                <div class="user-handle">@{{ user_data.username }}</div>
+                <div class="stats-container justify-content-start border-0 pt-3 mt-2">
+                    <div class="stat-item pl-0">
+                        <span class="stat-value">{{ created_count }}</span>
+                        <span class="stat-label">Quiz</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ liked_count }}</span>
+                        <span class="stat-label">Beğeni</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form method="post" enctype="multipart/form-data" id="foto-form" hidden>
+            <input type="file" name="profile_image" id="foto-input" accept="image/*" onchange="document.getElementById('foto-form').submit()">
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <a href="/paylastiklarim" class="dashboard-card theme-blue">
+                <div class="card-icon-box"><i class="fa-solid fa-layer-group"></i></div>
+                <div class="card-content">
+                    <h5>Paylaştıklarım</h5>
+                    <p>Oluşturduğun testleri yönet</p>
+                </div>
+                <i class="fa-solid fa-chevron-right card-arrow"></i>
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="/kaydettiklerim" class="dashboard-card theme-red">
+                <div class="card-icon-box"><i class="fa-solid fa-bookmark"></i></div>
+                <div class="card-content">
+                    <h5>Kaydettiklerim</h5>
+                    <p>Koleksiyonun burada</p>
+                </div>
+                <i class="fa-solid fa-chevron-right card-arrow"></i>
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="/bilgiler" class="dashboard-card theme-gold">
+                <div class="card-icon-box"><i class="fa-solid fa-user-gear"></i></div>
+                <div class="card-content">
+                    <h5>Bilgilerim</h5>
+                    <p>Hesap ayarlarını güncelle</p>
+                </div>
+                <i class="fa-solid fa-chevron-right card-arrow"></i>
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="/create_quiz" class="dashboard-card theme-green">
+                <div class="card-icon-box"><i class="fa-solid fa-plus"></i></div>
+                <div class="card-content">
+                    <h5>Yeni quiz</h5>
+                    <p>Turnuva, kör sıralama veya test</p>
+                </div>
+                <i class="fa-solid fa-arrow-right card-arrow"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

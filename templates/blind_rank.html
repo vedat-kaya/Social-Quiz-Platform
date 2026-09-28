@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}Kör Sıralama · {{ quiz.title }} | SorSana{% endblock %}
+{% block body_class %}play-immersive{% endblock %}
+
+{% block body %}
+<div class="qz-blind" id="blind-rank-app">
+    <script type="application/json" id="blind-items-data">{{ items_json|tojson }}</script>
+    <div class="qz-blind-bg" id="blind-bg"></div>
+    <div class="qz-reel" id="blind-reel" aria-hidden="true"></div>
+
+    <header class="qz-blind-head">
+        <a class="qz-back" href="{{ url_for('quiz_detail', quiz_id=quiz.quiz_id) }}"><i class="fa-solid fa-chevron-left"></i></a>
+        <div>
+            <p class="qz-kicker">Kör Sıralama</p>
+            <h1>{{ quiz.title }}</h1>
+        </div>
+        <div class="qz-count"><b id="blind-remaining">0</b> kaldı</div>
+    </header>
+
+    <div id="blind-play" class="qz-blind-stage">
+        <div class="qz-ranks" id="blind-board">
+            {% for n in range(1, 11) %}
+            <button type="button" class="qz-rank" data-rank="{{ n }}" aria-label="Sıra {{ n }}">
+                <span class="qz-rank-num">{{ n }}</span>
+                <img class="qz-rank-thumb" alt="" hidden>
+            </button>
+            {% endfor %}
+        </div>
+        <div class="qz-hero-wrap">
+            <div class="qz-hero" id="blind-stage-card">
+                <img id="blind-stage-img" alt="Aday">
+            </div>
+            <div class="qz-hero-name" id="blind-stage-name">…</div>
+            <p class="qz-hero-hint">Soldan bir sıra seç · 1–9 ve 0</p>
+        </div>
+    </div>
+
+    <div id="blind-result" class="qz-result" hidden>
+        <p class="qz-kicker">Sıralaman kilitlendi</p>
+        <h2>Top 10</h2>
+        <ol class="blind-result-list" id="blind-result-list"></ol>
+        <div class="qz-result-actions">
+            <a class="btn btn-primary" href="{{ url_for('blind_rank', quiz_id=quiz.quiz_id) }}">Tekrar sırala</a>
+            <a class="btn btn-outline-light" href="{{ url_for('tier_list', quiz_id=quiz.quiz_id) }}">Tier List</a>
+            <a class="btn btn-link" href="{{ url_for('quiz_detail', quiz_id=quiz.quiz_id) }}">Lobi</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="{{ url_for('static', filename='js/blind-rank.js') }}"></script>
+{% endblock %}

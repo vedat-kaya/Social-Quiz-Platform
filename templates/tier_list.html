@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}Tier List · {{ quiz.title }} | SorSana{% endblock %}
+{% block body_class %}play-immersive{% endblock %}
+
+{% block body %}
+<div class="tier-app" id="tier-app" data-quiz="{{ quiz.quiz_id }}">
+    <script type="application/json" id="tier-items-data">{{ items_json|tojson }}</script>
+    <header class="tier-head">
+        <a class="qz-back" href="{{ url_for('quiz_detail', quiz_id=quiz.quiz_id) }}"><i class="fa-solid fa-chevron-left"></i></a>
+        <div>
+            <p class="qz-kicker">Tier List</p>
+            <h1>{{ quiz.title }}</h1>
+        </div>
+        <div class="tier-tools">
+            <button type="button" class="tier-reset" id="tier-add-row">+ Katman</button>
+            <button type="button" class="tier-reset" id="tier-reset">Sıfırla</button>
+        </div>
+    </header>
+    <div class="tier-board" id="tier-board"></div>
+    <section class="tier-pool-wrap">
+        <p class="tier-pool-label">Havuz · sürükle veya seçip kata tıkla</p>
+        <div class="tier-pool" id="tier-pool" data-drop="pool"></div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tier-list.js') }}"></script>
+{% endblock %}

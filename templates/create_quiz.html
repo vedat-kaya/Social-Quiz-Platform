@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% from "includes/_formhelpers.html" import render_field %}
+{% block title %}Yeni Quiz | SorSana{% endblock %}
+
+{% block body %}
+<div class="studio">
+    <header class="studio-top">
+        <p class="qz-kicker" style="color: var(--primary-color);">Stüdyo · 1 / 2</p>
+        <h1>Yeni içerik</h1>
+        <p class="studio-lead">Kapak, kategori ve format. Kör sıralama 10 aday ister; turnuva ve tier 2 ile oynanır.</p>
+    </header>
+    <form method="post" enctype="multipart/form-data" class="studio-grid">
+        <section class="studio-main">
+            <label class="studio-label">Başlık</label>
+            {{ render_field(form.title, class="studio-input", placeholder="Örn. En ikonik GTA karakteri kim?") }}
+            <label class="studio-label">Açıklama</label>
+            {{ render_field(form.description, class="studio-input studio-area", rows="7", placeholder="Kısa bir sahne kur. Boş da bırakılabilir.") }}
+        </section>
+        <aside class="studio-side">
+            <label class="studio-label">Kapak</label>
+            <div class="cover-drop">
+                <i class="fa-solid fa-image"></i>
+                <span>Görseli bırak veya seç</span>
+                <input type="file" name="cover_image" accept="image/*">
+            </div>
+            <label class="studio-label">Kategori</label>
+            {{ form.category(class="studio-input") }}
+            <label class="studio-label">Format</label>
+            <div class="format-grid">
+                <label>
+                    <input type="radio" name="quiz_type" value="klasik_test" checked>
+                    <span><b>Klasik test</b><small>En az 3 soru</small></span>
+                </label>
+                <label>
+                    <input type="radio" name="quiz_type" value="turnuva">
+                    <span><b>Fotoğraf havuzu</b><small>Turnuva · Kör · Tier · min 10</small></span>
+                </label>
+            </div>
+            <button type="submit" class="studio-go">Devam et <i class="fa-solid fa-arrow-right"></i></button>
+        </aside>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelector('.cover-drop input')?.addEventListener('change', function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var box = e.target.closest('.cover-drop');
+    box.style.backgroundImage = 'url(' + URL.createObjectURL(file) + ')';
+    box.classList.add('has-file');
+});
+</script>
+{% endblock %}

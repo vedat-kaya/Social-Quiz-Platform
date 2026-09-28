@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}{{ quiz.title }} | SorSana{% endblock %}
+{% block body_class %}play-immersive{% endblock %}
+
+{% block body %}
+<div class="duel">
+    <header class="duel-bar">
+        <a class="qz-back" href="{{ url_for('quiz_detail', quiz_id=quiz.quiz_id) }}"><i class="fa-solid fa-chevron-left"></i></a>
+        <div>
+            <p class="qz-kicker">Hangisi?</p>
+            <h1>{{ quiz.title }}</h1>
+        </div>
+        <div class="duel-meta">{{ remaining }} aday · ← →</div>
+    </header>
+    <form method="post" id="tournamentForm" class="duel-form">
+        <button type="submit" name="vote" value="{{ item1.question_id }}" class="duel-pane" id="duel-left">
+            <img src="{{ url_for('static', filename='uploads/quiz_images/' + item1.image_url) }}" alt="{{ item1.question_text }}">
+            <span>{{ item1.question_text }}</span>
+        </button>
+        <button type="submit" name="vote" value="{{ item2.question_id }}" class="duel-pane" id="duel-right">
+            <img src="{{ url_for('static', filename='uploads/quiz_images/' + item2.image_url) }}" alt="{{ item2.question_text }}">
+            <span>{{ item2.question_text }}</span>
+        </button>
+    </form>
+    <a class="duel-reset" href="{{ url_for('quiz_clear_session', quiz_id=quiz.quiz_id) }}">Başa sar</a>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") document.getElementById("duel-left")?.click();
+    if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") document.getElementById("duel-right")?.click();
+});
+</script>
+{% endblock %}

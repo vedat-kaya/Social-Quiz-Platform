@@ -1,0 +1,69 @@
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid px-2 px-lg-4 nav-inner">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="{{ url_for('static', filename='img/Sorsanalogo.gif') }}" alt="Sorsana" class="navbar-logo">
+        </a>
+        <div class="d-lg-none ml-auto" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars custom-toggler-icon"></i>
+        </div>
+        <div class="collapse navbar-collapse d-none d-lg-flex align-items-center">
+            <div class="nav-pills-row mr-auto ml-4">
+                <a class="nav-chip" href="/onerilenler"><i class="fa-solid fa-fire"></i> Popüler</a>
+            </div>
+            <div class="nav-pills-row">
+                <a class="nav-chip nav-chip-zirve" href="{{ url_for('leaderboard') }}"><i class="fa-solid fa-trophy"></i> Zirve</a>
+                {% if session["is_admin"] %}
+                <a class="nav-chip nav-chip-admin" href="{{ url_for('admin_panel') }}"><i class="fa-solid fa-shield-halved"></i> Yönetim</a>
+                {% endif %}
+                <a class="nav-chip nav-chip-create" href="/create_quiz"><i class="fa-solid fa-plus"></i> Oluştur</a>
+                {% if session["logged_in"] %}
+                <div class="account-wrap">
+                    <button type="button" class="account-trigger" aria-haspopup="true">
+                        <img src="{{ url_for('static', filename='uploads/profile_pics/' + (session.profile_pic_url or 'default.png')) }}" alt="">
+                    </button>
+                    <div class="account-menu">
+                        <div class="account-id">
+                            <strong>{{ session.username }}</strong>
+                            <span>Hesap menüsü</span>
+                        </div>
+                        <a href="/profil">Profil</a>
+                        <a href="/paylastiklarim">Paylaştıklarım</a>
+                        <a href="/kaydettiklerim">Kaydettiklerim</a>
+                        <a href="/logout" class="is-danger">Çıkış</a>
+                    </div>
+                </div>
+                {% else %}
+                <a class="nav-chip" href="/login">Giriş yap</a>
+                <a class="nav-chip nav-chip-create" href="/register">Kayıt ol</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="mobile-sidebar" id="mobileSidebar">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <span class="text-white font-weight-bold h5 mb-0">Menü</span>
+        <button onclick="toggleSidebar()" class="btn text-white p-0"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    {% if session["logged_in"] %}
+    <a href="/profil" class="sidebar-link"><span class="sidebar-icon"><i class="fa-solid fa-user"></i></span> {{ session.username }}</a>
+    <a href="/paylastiklarim" class="sidebar-link"><span class="sidebar-icon"><i class="fa-solid fa-layer-group"></i></span> Paylaştıklarım</a>
+    <a href="/kaydettiklerim" class="sidebar-link"><span class="sidebar-icon"><i class="fa-solid fa-bookmark"></i></span> Kaydettiklerim</a>
+    {% endif %}
+    <a href="/" class="sidebar-link"><span class="sidebar-icon"><i class="fa-solid fa-house"></i></span> Anasayfa</a>
+    <a href="{{ url_for('leaderboard') }}" class="sidebar-link"><span class="sidebar-icon"><i class="fa-solid fa-trophy"></i></span> Zirve</a>
+    <a href="/create_quiz" class="sidebar-link"><span class="sidebar-icon"><i class="fa-solid fa-plus"></i></span> Oluştur</a>
+    <a href="/onerilenler" class="sidebar-link"><span class="sidebar-icon"><i class="fa-solid fa-fire"></i></span> Popüler</a>
+    {% if session["is_admin"] %}
+    <a href="{{ url_for('admin_panel') }}" class="sidebar-link" style="color:#ff8a8a;"><span class="sidebar-icon"><i class="fa-solid fa-shield-halved"></i></span> Yönetim</a>
+    {% endif %}
+    <div class="mt-auto">
+        {% if session["logged_in"] %}
+        <a href="/logout" class="sidebar-link text-danger border-0"><span class="sidebar-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Çıkış</a>
+        {% else %}
+        <a href="/login" class="btn btn-outline-light btn-block mb-2">Giriş yap</a>
+        <a href="/register" class="btn btn-block mb-0" style="background: var(--primary-color); color:#fff; font-weight:800;">Kayıt ol</a>
+        {% endif %}
+    </div>
+</div>

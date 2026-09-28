@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+{% block title %}Hakkımızda | SorSana{% endblock %}
+
+{% block head %}
+<style>
+    .about-page { color: #fff; padding: 12px 0 80px; }
+    .about-hero {
+        padding: 8vh 4vw 6vh;
+        max-width: 1100px;
+    }
+    .about-kicker {
+        letter-spacing: .28em;
+        text-transform: uppercase;
+        font-size: .72rem;
+        font-weight: 800;
+        color: #ff7b00;
+        margin-bottom: 18px;
+    }
+    .about-hero h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.8rem, 8vw, 6.4rem);
+        line-height: .92;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin: 0 0 22px;
+        max-width: 11ch;
+    }
+    .about-hero p.lead {
+        font-size: clamp(1.05rem, 2vw, 1.35rem);
+        color: rgba(255,255,255,.68);
+        max-width: 38rem;
+        line-height: 1.55;
+        margin: 0;
+    }
+    .about-strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: 1px solid rgba(255,255,255,.08);
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        margin: 0 2vw 48px;
+    }
+    .about-strip article {
+        padding: 28px 32px;
+        border-right: 1px solid rgba(255,255,255,.08);
+    }
+    .about-strip article:last-child { border-right: 0; }
+    .about-strip h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; }
+    .about-strip p { margin: 0; color: rgba(255,255,255,.58); font-size: .95rem; line-height: 1.5; }
+    .about-modes {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 18px;
+        padding: 0 4vw;
+        max-width: 1200px;
+    }
+    .mode-card {
+        background: #161616;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 24px;
+        padding: 36px;
+        min-height: 220px;
+    }
+    .mode-card.wide { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+    .mode-card h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; }
+    .mode-card p { color: rgba(255,255,255,.62); margin: 0; line-height: 1.55; }
+    .about-contact {
+        margin: 56px 4vw 0;
+        padding: 36px 40px;
+        border-radius: 24px;
+        background: linear-gradient(135deg, #1c140c, #121212);
+        border: 1px solid rgba(255,123,0,.25);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        max-width: 1200px;
+    }
+    .about-contact h2 { font-size: 1.5rem; font-weight: 800; margin: 0 0 6px; }
+    .about-contact p { margin: 0; color: rgba(255,255,255,.6); }
+    a.about-mail,
+    a.about-mail:hover,
+    a.btn.about-mail {
+        color: #fff !important;
+        background: #ff7b00 !important;
+        border: 0 !important;
+        padding: 12px 22px;
+        border-radius: 999px;
+        font-weight: 800;
+        text-decoration: none !important;
+        box-shadow: none;
+    }
+    @media (max-width: 800px) {
+        .about-strip, .about-modes, .mode-card.wide { grid-template-columns: 1fr; }
+        .about-strip article { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+        .about-hero { padding-top: 4vh; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="about-page">
+    <header class="about-hero">
+        <p class="about-kicker">Manifesto</p>
+        <h1>Bilgini yarıştır.</h1>
+        <p class="lead">SorSana, test çözmenin ötesinde: fotoğraf havuzu, kör sıralama, turnuva ve tier list ile topluluğun kendi sahnesini kurduğu bir oyun alanı.</p>
+    </header>
+
+    <section class="about-strip">
+        <article>
+            <h3>Oluştur</h3>
+            <p>Klasik test veya fotoğraf havuzu. Taslağa al, bitince yayınla. Yarım kalan iş vitrine düşmez.</p>
+        </article>
+        <article>
+            <h3>Oyna</h3>
+            <p>Aynı içerik üç şekilde oynanır: düello, kör sıralama, tier list. Hızlı, görsel, paylaşılır.</p>
+        </article>
+        <article>
+            <h3>Yüksel</h3>
+            <p>Zirve tablosu, beğeni ve kayıtlar. İyi içerik öne çıkar, gürültü geride kalır.</p>
+        </article>
+    </section>
+
+    <section class="about-modes">
+        <div class="mode-card">
+            <h2>Neden SorSana?</h2>
+            <p>Tek bir fotoğraf setinden üç oyun. Büyük görseller, okunaklı arayüz, az tıklama. Eğlence sürtünmesiz olsun diye tasarlandı.</p>
+        </div>
+        <div class="mode-card">
+            <h2>Kim yapıyor?</h2>
+            <p>Vedat Kaya. Bağımsız, Türkiye’den. Instagram’dan yazabilirsin; her geri bildirim sahneye işlenir.</p>
+        </div>
+        <div class="mode-card wide">
+            <div>
+                <h2>Klasik test</h2>
+                <p>Soru, şık, sonuç. En az üç soruyla yayın.</p>
+            </div>
+            <div>
+                <h2>Kör sıralama</h2>
+                <p>Ortada fotoğraf, solda 1–10. Hızlı karar, net sıra.</p>
+            </div>
+            <div>
+                <h2>Tier list</h2>
+                <p>Satırları sen yazarsın. Sürükle, yerleştir, paylaş.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-contact">
+        <div>
+            <h2>Konuşalım</h2>
+            <p>Hata, fikir veya iş birliği.</p>
+        </div>
+        <a class="btn about-mail" href="mailto:sorsana.iletisim@gmail.com">sorsana.iletisim@gmail.com</a>
+    </section>
+</div>
+{% endblock %}

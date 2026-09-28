@@ -1,0 +1,24 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+    {% set safe_category = 'danger' if category == 'error' else category %}
+    <div class="premium-toast toast-{{ safe_category }}" role="status">
+        <div class="toast-icon">
+            {% if safe_category == 'success' %}
+                <i class="fa-solid fa-check"></i>
+            {% elif safe_category == 'danger' %}
+                <i class="fa-solid fa-bolt"></i>
+            {% elif safe_category == 'warning' %}
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            {% else %}
+                <i class="fa-solid fa-info"></i>
+            {% endif %}
+        </div>
+        <div class="toast-content">{{ message }}</div>
+        <button type="button" class="toast-close" aria-label="Kapat" onclick="this.parentElement.remove()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
